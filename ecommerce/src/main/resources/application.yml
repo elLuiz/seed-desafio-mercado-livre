@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: ecommerce
+  datasource:
+    url: ${DB_HOST}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driverClassName: org.postgresql.Driver
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 10
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgresPlusDialect
+        default_schema: ecommerce
+        jdbc_batch_size: 100
+        order_inserts: true
+        order_updates: true
+    hibernate:
+      ddl-auto: none
+    show-sql: ${SHOW_SQL:false}
+    open-in-view: false
+  flyway:
+    enabled: true
+    schemas: ecommerce
+    baselineOnMigrate: true

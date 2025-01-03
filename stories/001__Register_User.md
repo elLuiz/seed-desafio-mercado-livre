@@ -20,9 +20,9 @@ The following restrictions are observed:
   - **Pattern:** Must be a valid email;
   - **Unique:** Yes.
 - **Password:** Represents the password by which the user can log in his/her account in combination with his/her login.
-  - **Length:** Must be between 6 and 11 characters long;
+  - **Length:** Must be between 8 and 16 characters long;
   - **Required:** Yes;
-  - **Pattern:** Must contain at least one special character symbol, one number, and one uppercase letter.
+  - **Pattern:** Must contain at least one special character symbol (#$>?+-@), one number, and one uppercase letter.
 - **Creation date:** Represents the moment when the user was created.
 
 ### Output
@@ -46,18 +46,18 @@ The payload must be similar to this:
 {
   "name": "The user name",
   "login": "email@valid.email.com",
-  "password": "QWJjZGVmZw=="
+  "password": "QWJjZGVmZw@12"
 }
 ```
-The password must be sent in `base64`.
 
 ### NFR 2: Password storage
-The passwords must be stored in hash, using the `SHA-256` hashing algorithm. The system must not store any password information in plain text.
+The passwords must be stored in hash, using the `Bcrypt` hashing algorithm, with 12 rounds by default. The system must not store any password information in plain text.
 
 ### NFR 3: Responses
 
 #### Success
-If the account is successfully created, the system must return the HTTP status `204 No Content`
+If the account is successfully created, the system must return the HTTP status `201 Created`. The header `Location` must also be returned with the URI to
+access the resource in the server.
 
 #### Input errors
 If the user has committed any mistakes while registering the account, the system must return the following payload under the `400 Bad Request` status code:
@@ -67,7 +67,7 @@ If the user has committed any mistakes while registering the account, the system
     {
       "fieldId": "Field ID",
       "error": "Description of the error",
-      "errorCode": "error.code"
+      "code": "error.code"
     }
   ]
 }
