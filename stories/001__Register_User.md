@@ -23,6 +23,7 @@ The following restrictions are observed:
   - **Length:** Must be between 6 and 11 characters long;
   - **Required:** Yes;
   - **Pattern:** Must contain at least one special character symbol, one number, and one uppercase letter.
+- **Creation date:** Represents the moment when the user was created.
 
 ### Output
 If the input is correct, the system must display a success message to the user. Otherwise, it must show the errors that prevented
