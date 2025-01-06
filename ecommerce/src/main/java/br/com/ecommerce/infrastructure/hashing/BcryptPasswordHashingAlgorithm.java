@@ -1,15 +1,15 @@
 package br.com.ecommerce.infrastructure.hashing;
 
-import br.com.ecommerce.domain.model.user.Hashing;
+import br.com.ecommerce.domain.model.user.PasswordHashing;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BcryptHashingAlgorithm implements Hashing {
+public class BcryptPasswordHashingAlgorithm implements PasswordHashing {
     private final PasswordEncoder passwordEncoder;
 
-    public BcryptHashingAlgorithm(@Qualifier("bcrypt") PasswordEncoder passwordEncoder) {
+    public BcryptPasswordHashingAlgorithm(@Qualifier("bcrypt") PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

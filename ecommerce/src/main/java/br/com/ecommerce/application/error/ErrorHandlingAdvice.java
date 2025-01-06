@@ -2,6 +2,7 @@ package br.com.ecommerce.application.error;
 
 import br.com.ecommerce.application.common.ErrorDescription;
 import br.com.ecommerce.application.common.Errors;
+import br.com.ecommerce.domain.exception.ValidationException;
 import br.com.ecommerce.util.Translator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -37,5 +39,12 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
                     });
         }
         return errors;
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    protected ResponseEntity<Errors> handleValidationException(ValidationException validationException) {
+        Errors errors = new Errors();
+        validationException.getErrors().getErrors().forEach(validationError -> errors.addError(new ErrorDescription(validationError.field(), validationError.code(), translator.translate(validationError.code()))));
+        return ResponseEntity.badRequest().body(errors);
     }
 }
