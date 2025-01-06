@@ -58,7 +58,7 @@ class CreateUserControllerTest extends RequestSender {
 
     static Stream<Arguments> provideValidUsers() {
         return Stream.of(
-                Arguments.of(new CreateUserCommand("Max Verstappen", "vert@ver.rb", "WorldChampion@24")),
+                Arguments.of(new CreateUserCommand("Max Verstappen", "vert@ver.com", "WorldChampion@24")),
                 Arguments.of(new CreateUserCommand("Ronaldo Fenômeno", "gol@gmail.com", "StrongKnees@199>")),
                 Arguments.of(new CreateUserCommand("AVS".repeat(40), "email@email.com", "@@tronApas112211"))
         );
