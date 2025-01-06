@@ -10,4 +10,8 @@ public abstract class GenericEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
+    public Long getId() {
+        return id;
+    }
 }
