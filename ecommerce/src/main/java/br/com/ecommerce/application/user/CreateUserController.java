@@ -27,8 +27,8 @@ public class CreateUserController {
         User user = registerUserService.register(createUserCommand);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
-                    .build()
+                    .buildAndExpand(user.getId())
                     .toUri())
-                .body(new UserCreatedResponse(user.getId(), user.getFullName()));
+                .body(UserCreatedResponse.toResponse(user));
     }
 }

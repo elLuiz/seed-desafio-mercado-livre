@@ -4,6 +4,7 @@ import br.com.ecommerce.domain.model.user.User;
 import br.com.ecommerce.service.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -14,7 +15,7 @@ class UserEntityManagerRepository implements UserRepository {
     EntityManager entityManager;
 
     @Override
-    public void add(User user) {
+    public void add(@Valid User user) {
         entityManager.persist(user);
     }
 

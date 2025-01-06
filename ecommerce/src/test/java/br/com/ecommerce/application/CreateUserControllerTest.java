@@ -4,6 +4,7 @@ import br.com.ecommerce.application.util.IntegrationTest;
 import br.com.ecommerce.domain.command.CreateUserCommand;
 import br.com.ecommerce.service.user.UserRepository;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -58,9 +59,32 @@ class CreateUserControllerTest extends RequestSender {
 
     static Stream<Arguments> provideValidUsers() {
         return Stream.of(
-                Arguments.of(new CreateUserCommand("Max Verstappen", "vert@ver.rb", "WorldChampion@24")),
+                Arguments.of(new CreateUserCommand("Max Verstappen", "vert@ver.com", "WorldChampion@24")),
                 Arguments.of(new CreateUserCommand("Ronaldo Fenômeno", "gol@gmail.com", "StrongKnees@199>")),
                 Arguments.of(new CreateUserCommand("AVS".repeat(40), "email@email.com", "@@tronApas112211"))
         );
     }
+
+    @Test
+    void shouldNotCreateUserWithDuplicateEmail() throws Exception {
+        CreateUserCommand createUserCommand = new CreateUserCommand("Max Verstappen", "vert1@ver.com", "WorldChampion@24");
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                .content(objectMapper.writeValueAsString(createUserCommand))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US"));
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().exists("Location"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fullName", Matchers.equalTo(createUserCommand.fullName())));
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                .content(objectMapper.writeValueAsString(createUserCommand))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US"));
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[*].code", Matchers.contains("login.must.be.unique")));
+    }
+
 }

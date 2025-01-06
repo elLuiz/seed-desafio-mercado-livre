@@ -16,9 +16,9 @@ public class Password {
 
     private Password() {}
 
-    public static Password create(String plainPassword, Hashing hashing) {
+    public static Password create(String plainPassword, PasswordHashing passwordHashing) {
         Password password = new Password();
-        password.value = hashing.hash(plainPassword);
+        password.value = passwordHashing.hash(plainPassword);
         password.expiresAt = OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).plusYears(2);
         return password;
     }

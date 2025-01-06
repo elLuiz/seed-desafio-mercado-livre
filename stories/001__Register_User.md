@@ -51,7 +51,7 @@ The payload must be similar to this:
 ```
 
 ### NFR 2: Password storage
-The passwords must be stored in hash, using the `Bcrypt` hashing algorithm, with 12 rounds by default. The system must not store any password information in plain text.
+The passwords must be stored in hash, using the `Bcrypt` passwordHashing algorithm, with 12 rounds by default. The system must not store any password information in plain text.
 
 ### NFR 3: Responses
 
