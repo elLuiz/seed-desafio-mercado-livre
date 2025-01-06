@@ -1,6 +1,6 @@
 package br.com.ecommerce.domain.exception;
 
-import br.com.ecommerce.domain.common.ValidationErrors;
+import br.com.ecommerce.domain.common.validation.ValidationErrors;
 import lombok.Getter;
 
 @Getter

@@ -1,7 +1,7 @@
 package br.com.ecommerce.domain.model.user;
 
-import br.com.ecommerce.domain.common.ValidationError;
-import br.com.ecommerce.domain.common.ValidationErrors;
+import br.com.ecommerce.domain.common.validation.ValidationError;
+import br.com.ecommerce.domain.common.validation.ValidationErrors;
 import br.com.ecommerce.util.Either;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

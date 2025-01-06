@@ -1,4 +1,4 @@
-package br.com.ecommerce.domain.common;
+package br.com.ecommerce.domain.common.validation;
 
 import br.com.ecommerce.util.Either;
 

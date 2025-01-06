@@ -1,4 +1,4 @@
-package br.com.ecommerce.domain.common;
+package br.com.ecommerce.domain.common.validation;
 
 import java.util.HashSet;
 import java.util.Set;

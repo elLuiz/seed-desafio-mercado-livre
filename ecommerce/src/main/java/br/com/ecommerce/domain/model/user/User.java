@@ -1,12 +1,10 @@
 package br.com.ecommerce.domain.model.user;
 
 import br.com.ecommerce.domain.exception.ValidationException;
+import br.com.ecommerce.domain.model.GenericEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 
@@ -16,10 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_user")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends GenericEntity {
     @Column(name = "full_name", nullable = false)
     private String fullName;
     @Column(name = "login", nullable = false, unique = true)

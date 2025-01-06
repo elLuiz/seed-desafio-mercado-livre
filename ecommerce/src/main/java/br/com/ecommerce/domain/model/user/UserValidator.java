@@ -1,8 +1,7 @@
 package br.com.ecommerce.domain.model.user;
 
-import br.com.ecommerce.domain.common.StepValidator;
-import br.com.ecommerce.domain.common.UserValidationConstants;
-import br.com.ecommerce.domain.common.ValidationErrors;
+import br.com.ecommerce.domain.common.validation.StepValidator;
+import br.com.ecommerce.domain.common.validation.ValidationErrors;
 import br.com.ecommerce.util.Either;
 import br.com.ecommerce.util.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;

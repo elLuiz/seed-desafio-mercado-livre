@@ -1,4 +1,4 @@
-package br.com.ecommerce.domain.common;
+package br.com.ecommerce.domain.model.user;
 
 public class UserValidationConstants {
     private UserValidationConstants() {}
