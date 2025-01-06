@@ -41,7 +41,7 @@ public class User extends GenericEntity {
                 .hasValidName(fullName)
                 .hasValidPassword(password)
                 .evaluate()
-                .orElseThrow(validationErrors -> {throw new ValidationException(validationErrors);});
+                .orElseThrow(ValidationException::new);
         this.login = login;
         this.fullName = fullName;
         this.createdAt = OffsetDateTime.now(ZoneId.of("UTC"));
@@ -50,10 +50,6 @@ public class User extends GenericEntity {
 
     public String getFullName() {
         return fullName;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public OffsetDateTime getCreatedAt() {

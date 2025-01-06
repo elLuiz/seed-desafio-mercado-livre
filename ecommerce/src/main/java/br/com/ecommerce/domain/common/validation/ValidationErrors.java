@@ -20,4 +20,10 @@ public class ValidationErrors {
     public Set<ValidationError> getErrors() {
         return errors;
     }
+
+    public static ValidationErrors single(String field, String code) {
+        ValidationErrors validationErrors = new ValidationErrors();
+        validationErrors.add(field, code);
+        return validationErrors;
+    }
 }
