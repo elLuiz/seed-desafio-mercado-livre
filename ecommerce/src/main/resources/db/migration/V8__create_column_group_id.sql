@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS ecommerce.tb_user ADD COLUMN IF NOT EXISTS fk_group_id bigint NOT NULL;
+ALTER TABLE IF EXISTS ecommerce.tb_user ADD CONSTRAINT fkGroup FOREIGN KEY(fk_group_id) REFERENCES ecommerce.tb_group(id);

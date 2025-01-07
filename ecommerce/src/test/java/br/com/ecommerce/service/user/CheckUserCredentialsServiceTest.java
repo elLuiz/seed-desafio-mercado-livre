@@ -3,6 +3,7 @@ package br.com.ecommerce.service.user;
 import br.com.ecommerce.domain.common.validation.ValidationError;
 import br.com.ecommerce.domain.exception.ResourceNotFound;
 import br.com.ecommerce.domain.exception.ValidationException;
+import br.com.ecommerce.domain.model.permission.group.Group;
 import br.com.ecommerce.domain.model.user.PasswordHashing;
 import br.com.ecommerce.domain.model.user.User;
 import br.com.ecommerce.infrastructure.hashing.BcryptPasswordHashingAlgorithm;
@@ -28,10 +29,12 @@ class CheckUserCredentialsServiceTest {
     UserRepository userRepository;
     PasswordHashing passwordHashing = new BcryptPasswordHashingAlgorithm(new BCryptPasswordEncoder());
     CheckUserCredentialsService checkUserCredentialsService;
+    private Group group;
 
     @BeforeEach
     void setUp() {
         this.checkUserCredentialsService = new CheckUserCredentialsService(userRepository, passwordHashing);
+        this.group = new Group("CONSUMER", "Consumer group");
     }
 
     @ParameterizedTest
@@ -63,7 +66,7 @@ class CheckUserCredentialsServiceTest {
 
     @Test
     void shouldReturnErrorWhenPasswordDoesNotMatch() {
-        User user = new User("login@login.com", "Max Verstappen", "World@2024", passwordHashing);
+        User user = new User("login@login.com", "Max Verstappen", "World@2024", passwordHashing, group);
         Mockito.when(userRepository.findByLogin("login@login.com"))
                 .thenReturn(Optional.of(user));
         Set<ValidationError> validationErrors = checkUserCredentialsService.loadByLoginAndPassword("login@login.com", "World@2025")
@@ -76,7 +79,8 @@ class CheckUserCredentialsServiceTest {
 
     @Test
     void shouldReturnUserWhenPasswordMatches() {
-        User user = new User("login@login.com", "Max Verstappen", "World@2024", passwordHashing);
+        group = new Group("CONSUMER", "Consumer group");
+        User user = new User("login@login.com", "Max Verstappen", "World@2024", passwordHashing, group);
         Mockito.when(userRepository.findByLogin("login@login.com"))
                 .thenReturn(Optional.of(user));
         User returnedUser = checkUserCredentialsService.loadByLoginAndPassword("login@login.com", "World@2024")

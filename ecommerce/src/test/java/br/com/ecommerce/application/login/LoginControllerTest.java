@@ -3,7 +3,6 @@ package br.com.ecommerce.application.login;
 import br.com.ecommerce.application.RequestSender;
 import br.com.ecommerce.application.login.dto.LoginRequest;
 import br.com.ecommerce.application.util.IntegrationTest;
-import br.com.ecommerce.domain.command.CreateUserCommand;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

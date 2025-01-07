@@ -1,4 +1,4 @@
-# Story 3: Role based access control (RBAC)
+# Story 3: Role-based access control (RBAC)
 As a logged-in user, I want to be able to access resources based on my group permissions.
 
 ## Functional Requirements
@@ -34,10 +34,10 @@ A role contains the properties listed below:
 ## FR 03: Groups and Roles
 The system must already provide the following groups and roles:
 
-| Group Name | Roles                                                                                                                  |
-|------------|------------------------------------------------------------------------------------------------------------------------|
-| ADMIN      | CREATE_ADMINS, DELETE_ACCOUNT, DELETE_PRODUCT, DELETE_REVIEW, DELETE_PRODUCT_IMAGE, CREATE_CATEGORY, DELETE_CATEGORY   |
-| CONSUMER   | CREATE_PRODUCT, BUY_PRODUCT, CREATE_CATEGORY, DELETE_CATEGORY, REVIEW_PRODUCT, WRITE_REVIEW, DELETE_REVIEW             |
+| Group Name | Roles                                                                           |
+|------------|---------------------------------------------------------------------------------|
+| ADMIN      | CREATE_ADMIN, DELETE_ACCOUNT, DELETE_PRODUCT, DELETE_REVIEW, CREATE_CATEGORY    |
+| CONSUMER   | CREATE_PRODUCT, BUY_PRODUCT, CREATE_CATEGORY, REVIEW_PRODUCT, DELETE_REVIEW     |
 
 
 ## Non Functional Requirements

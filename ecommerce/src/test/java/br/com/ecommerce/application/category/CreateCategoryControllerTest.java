@@ -31,7 +31,7 @@ class CreateCategoryControllerTest extends RequestSender {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @WithMockJwt
+    @WithMockJwt(roles = {"CREATE_CATEGORY", "CREATE_PRODUCT"})
     @ParameterizedTest
     @MethodSource("provideInvalidCategories")
     void shouldReturnBadRequestWhenThereIsInputError(CreateCategoryCommand createCategoryCommand, List<String> expectedErrors) throws Exception {
@@ -55,17 +55,17 @@ class CreateCategoryControllerTest extends RequestSender {
     }
 
     @Test
-    @WithMockJwt
+    @WithMockJwt(roles = {"CREATE_CATEGORY", "CREATE_PRODUCT"})
     void shouldSaveCategoryWithParent() throws Exception {
         Long categoryId = categoryRepository.findByName("Programming")
                 .map(Category::getId)
                 .orElseThrow();
         CreateCategoryCommand createCategoryCommand = new CreateCategoryCommand("C#", categoryId);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
-                .with(SecurityMockMvcRequestPostProcessors.jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
-                .content(objectMapper.writeValueAsString(createCategoryCommand)));
+                .content(objectMapper.writeValueAsString(createCategoryCommand)))
+                .andDo(MockMvcResultHandlers.print());
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.notNullValue()))
@@ -74,11 +74,10 @@ class CreateCategoryControllerTest extends RequestSender {
     }
 
     @Test
-    @WithMockJwt
+    @WithMockJwt(roles = {"CREATE_CATEGORY", "CREATE_PRODUCT"})
     void shouldSaveCategoryWithoutParent() throws Exception {
         CreateCategoryCommand createCategoryCommand = new CreateCategoryCommand("Java", null);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
-                .with(SecurityMockMvcRequestPostProcessors.jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
                 .content(objectMapper.writeValueAsString(createCategoryCommand)))

@@ -2,6 +2,7 @@ package br.com.ecommerce.application.common;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -42,7 +43,7 @@ public class WithMockJwtFactory implements WithSecurityContextFactory<WithMockJw
                 .claim("roles", annotation.roles())
                 .build();
         Jwt jwt = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet));
-        Authentication authentication = new JwtAuthenticationToken(jwt);
+        Authentication authentication = new JwtAuthenticationToken(jwt, AuthorityUtils.createAuthorityList(annotation.roles()));
         securityContext.setAuthentication(authentication);
         return securityContext;
     }
