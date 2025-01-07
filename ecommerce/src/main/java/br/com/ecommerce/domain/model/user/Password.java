@@ -22,4 +22,8 @@ public class Password {
         password.expiresAt = OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).plusYears(2);
         return password;
     }
+
+    public String getValue() {
+        return value;
+    }
 }

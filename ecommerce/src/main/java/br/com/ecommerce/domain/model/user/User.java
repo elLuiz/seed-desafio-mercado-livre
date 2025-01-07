@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Email;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tb_user")
@@ -24,6 +25,8 @@ public class User extends GenericEntity {
     private OffsetDateTime createdAt;
     @Embedded
     private Password password;
+    @Column(name = "subject", nullable = false)
+    private String subject;
 
     private User() {}
 
@@ -46,6 +49,7 @@ public class User extends GenericEntity {
         this.fullName = fullName;
         this.createdAt = OffsetDateTime.now(ZoneId.of("UTC"));
         this.password = Password.create(password, passwordHashing);
+        this.subject = UUID.randomUUID().toString();
     }
 
     public String getFullName() {
@@ -54,6 +58,10 @@ public class User extends GenericEntity {
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getSubject() {
+        return subject;
     }
 
     @Override
@@ -66,5 +74,9 @@ public class User extends GenericEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, login);
+    }
+
+    public boolean passwordMatches(String password, PasswordHashing passwordHashing) {
+        return passwordHashing.matches(password, this.password);
     }
 }

@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS ecommerce.tb_user ADD COLUMN IF NOT EXISTS subject VARCHAR(64);

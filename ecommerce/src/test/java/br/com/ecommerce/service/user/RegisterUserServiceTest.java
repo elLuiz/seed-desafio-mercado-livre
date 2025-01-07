@@ -1,6 +1,7 @@
 package br.com.ecommerce.service.user;
 
 import br.com.ecommerce.domain.command.CreateUserCommand;
+import br.com.ecommerce.domain.model.user.Password;
 import br.com.ecommerce.domain.model.user.PasswordHashing;
 import br.com.ecommerce.domain.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,11 @@ class RegisterUserServiceTest {
             @Override
             public String hash(String plainText) {
                 return "RandomPassword" + plainText;
+            }
+
+            @Override
+            public boolean matches(String plainText, Password password) {
+                return false;
             }
         };
         this.registerUserService = new RegisterUserService(passwordHashing, userRepository);
