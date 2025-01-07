@@ -1,5 +1,6 @@
 package br.com.ecommerce.infrastructure.hashing;
 
+import br.com.ecommerce.domain.model.user.Password;
 import br.com.ecommerce.domain.model.user.PasswordHashing;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,5 +17,10 @@ public class BcryptPasswordHashingAlgorithm implements PasswordHashing {
     @Override
     public String hash(String plainText) {
         return passwordEncoder.encode(plainText);
+    }
+
+    @Override
+    public boolean matches(String plainText, Password password) {
+        return passwordEncoder.matches(plainText, password.getValue());
     }
 }

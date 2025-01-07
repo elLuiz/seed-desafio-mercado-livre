@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS ecommerce.tb_user (
     login varchar(250) NOT NULL UNIQUE,
     created_at timestamp with time zone NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
     password varchar(100) NOT NULL,
-    expires_at timestamp with time zone NOT NULL
+    expires_at timestamp with time zone NOT NULL,
+    subject varchar(64) NOT NULL
 );
