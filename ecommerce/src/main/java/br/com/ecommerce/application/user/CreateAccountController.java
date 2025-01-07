@@ -1,9 +1,9 @@
 package br.com.ecommerce.application.user;
 
 import br.com.ecommerce.application.user.dto.UserCreatedResponse;
-import br.com.ecommerce.domain.command.CreateUserCommand;
+import br.com.ecommerce.domain.command.CreateAccountCommand;
 import br.com.ecommerce.domain.model.user.User;
-import br.com.ecommerce.service.user.RegisterUserService;
+import br.com.ecommerce.service.user.RegisterAccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/api/v1/users")
-public class CreateUserController {
-    private final RegisterUserService registerUserService;
+@RequestMapping("/api/v1/accounts")
+public class CreateAccountController {
+    private final RegisterAccountService registerAccountService;
 
-    public CreateUserController(RegisterUserService registerUserService) {
-        this.registerUserService = registerUserService;
+    public CreateAccountController(RegisterAccountService registerAccountService) {
+        this.registerAccountService = registerAccountService;
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> register(@Valid @RequestBody CreateUserCommand createUserCommand) {
-        User user = registerUserService.register(createUserCommand);
+    public ResponseEntity<Object> register(@Valid @RequestBody CreateAccountCommand createAccountCommand) {
+        User user = registerAccountService.register(createAccountCommand);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(user.getId())

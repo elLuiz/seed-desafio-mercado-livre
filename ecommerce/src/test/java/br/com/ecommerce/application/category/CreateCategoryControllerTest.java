@@ -1,6 +1,7 @@
 package br.com.ecommerce.application.category;
 
 import br.com.ecommerce.application.RequestSender;
+import br.com.ecommerce.application.common.WithMockJwt;
 import br.com.ecommerce.application.util.IntegrationTest;
 import br.com.ecommerce.domain.model.category.Category;
 import br.com.ecommerce.service.category.CategoryRepository;
@@ -13,9 +14,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
@@ -28,10 +31,12 @@ class CreateCategoryControllerTest extends RequestSender {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @WithMockJwt(roles = {"CREATE_CATEGORY", "CREATE_PRODUCT"})
     @ParameterizedTest
     @MethodSource("provideInvalidCategories")
     void shouldReturnBadRequestWhenThereIsInputError(CreateCategoryCommand createCategoryCommand, List<String> expectedErrors) throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+                .with(SecurityMockMvcRequestPostProcessors.jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
                 .content(objectMapper.writeValueAsString(createCategoryCommand)));
@@ -50,6 +55,7 @@ class CreateCategoryControllerTest extends RequestSender {
     }
 
     @Test
+    @WithMockJwt(roles = {"CREATE_CATEGORY", "CREATE_PRODUCT"})
     void shouldSaveCategoryWithParent() throws Exception {
         Long categoryId = categoryRepository.findByName("Programming")
                 .map(Category::getId)
@@ -58,7 +64,8 @@ class CreateCategoryControllerTest extends RequestSender {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
-                .content(objectMapper.writeValueAsString(createCategoryCommand)));
+                .content(objectMapper.writeValueAsString(createCategoryCommand)))
+                .andDo(MockMvcResultHandlers.print());
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.notNullValue()))
@@ -67,16 +74,28 @@ class CreateCategoryControllerTest extends RequestSender {
     }
 
     @Test
+    @WithMockJwt(roles = {"CREATE_CATEGORY", "CREATE_PRODUCT"})
     void shouldSaveCategoryWithoutParent() throws Exception {
         CreateCategoryCommand createCategoryCommand = new CreateCategoryCommand("Java", null);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
-                .content(objectMapper.writeValueAsString(createCategoryCommand)));
+                .content(objectMapper.writeValueAsString(createCategoryCommand)))
+                .andDo(MockMvcResultHandlers.print());
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.equalTo("Java")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.parentCategory", Matchers.nullValue()));
+    }
+
+    @Test
+    void shouldReturnUnauthorizedWhenNoTokenIsProvided() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new CreateCategoryCommand("JAVA T", null))));
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.WWW_AUTHENTICATE));
     }
 }

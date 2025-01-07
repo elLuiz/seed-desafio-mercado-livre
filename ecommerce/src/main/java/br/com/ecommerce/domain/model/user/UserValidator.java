@@ -2,6 +2,7 @@ package br.com.ecommerce.domain.model.user;
 
 import br.com.ecommerce.domain.common.validation.StepValidator;
 import br.com.ecommerce.domain.common.validation.ValidationErrors;
+import br.com.ecommerce.domain.model.permission.group.Group;
 import br.com.ecommerce.util.Either;
 import br.com.ecommerce.util.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -35,6 +36,13 @@ class UserValidator implements StepValidator {
             errors.add("password", "password.must.not.be.null");
         } else if (!plainTextPassword.matches(UserValidationConstants.PASSWORD_EXPRESSION)) {
             errors.add("password", "password.must.not.violate.pattern");
+        }
+        return this;
+    }
+
+    public UserValidator hasValidGroup(Group group) {
+        if (group == null) {
+            errors.add("group", "group.cannot.be.null");
         }
         return this;
     }
