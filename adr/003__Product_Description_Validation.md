@@ -9,7 +9,7 @@ reducing the number of manual interventions.
 ## Decision
 The description will be analysed by Chat GPT-4. A second system will be created to process the description in background. This component
 will process events delivered by a RabbitMQ instance. The architecture should be similar to the image below: 
-![img.png](img.png)
+![img.png](../assets/adr/003_architecture.png)
 ### Components
 - **Ecommerce web server:** The current backend implementing the necessary logic to create products, and trigger events as new products are registered;
 - **RabbitMQ:** The message broker responsible for delivering events to the appropriate consumers;
