@@ -1,4 +1,4 @@
-# 002: Authentication through JWT
+# ADR 002: Authentication through JWT
 
 ## Problem
 The users must be authenticated to perform actions in the system, according to their roles. We need to have a stateless way to implement authentication, enabling integration with other systems and changing
