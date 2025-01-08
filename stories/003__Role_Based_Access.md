@@ -47,4 +47,4 @@ At the proper time, the system must provide an endpoint to create groups and rol
 
 ### NFR 02: Relationship
 Using a relational database, the users, groups and roles must interact with each other as shown in the diagram below:
-![img.png](img.png)
+![img.png](../assets/stories/003_nfr2.png)
