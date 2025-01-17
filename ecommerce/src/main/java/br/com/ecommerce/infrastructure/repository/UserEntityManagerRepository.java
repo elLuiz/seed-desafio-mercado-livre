@@ -24,4 +24,17 @@ class UserEntityManagerRepository extends GenericRepository<User> implements Use
                 .setParameter("login", login)
                 .getSingleResult());
     }
+
+    @Override
+    public Optional<User> findBySubject(String subject) {
+        var query = """
+                SELECT user FROM User user
+                JOIN FETCH user.group group
+                JOIN FETCH group.roles
+                WHERE UPPER(TRIM(subject)) = UPPER(TRIM(:subject))
+                """;
+        return Optional.ofNullable(entityManager.createQuery(query, User.class)
+                .setParameter("subject", subject)
+                .getSingleResult());
+    }
 }

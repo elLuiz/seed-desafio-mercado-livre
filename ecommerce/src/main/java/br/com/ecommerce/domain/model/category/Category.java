@@ -74,4 +74,8 @@ public class Category extends GenericEntity {
     public boolean hasParent() {
         return parent != null;
     }
+
+    public boolean isActive() {
+        return CategoryStatus.ACTIVE == this.categoryStatus;
+    }
 }
