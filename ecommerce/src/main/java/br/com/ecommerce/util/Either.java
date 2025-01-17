@@ -32,9 +32,13 @@ public class Either<L, R> {
     }
 
     public <X extends RuntimeException> R orElseThrow(Function<L, X> otherwiseFunction) {
-        if (isCorrect) {
+        if (valid()) {
             return this.right;
         }
         throw otherwiseFunction.apply(wrong);
+    }
+
+    public boolean valid() {
+        return isCorrect;
     }
 }

@@ -17,6 +17,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
+import java.util.List;
+
 public class RequestSender {
     @Autowired
     protected ObjectMapper objectMapper;
@@ -44,5 +46,9 @@ public class RequestSender {
         registry.add("spring.datasource.url", () -> postgreSQLContainer.getJdbcUrl());
         registry.add("spring.datasource.username", () -> postgreSQLContainer.getUsername());
         registry.add("spring.datasource.password", () -> postgreSQLContainer.getPassword());
+    }
+
+    protected static List<String> getExpectedErrors(String ...errors) {
+        return List.of(errors);
     }
 }
