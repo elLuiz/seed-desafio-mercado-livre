@@ -49,7 +49,7 @@ The payload must be as follows:
 ```json
 {
   "name": "string",
-  "price": "0.00",
+  "price": 2.00,
   "stockQuantity": 10,
   "characteristics": [
     {
