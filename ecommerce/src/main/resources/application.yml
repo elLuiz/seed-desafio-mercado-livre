@@ -25,3 +25,9 @@ spring:
     enabled: true
     schemas: ecommerce
     baselineOnMigrate: true
+jwt:
+  public:
+    key: classpath:app_public.key
+  private:
+    key: classpath:app.key
+  issuer: br.com.ecommerce

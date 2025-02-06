@@ -4,7 +4,10 @@ import br.com.ecommerce.application.common.ErrorDescription;
 import br.com.ecommerce.application.common.Errors;
 import br.com.ecommerce.domain.exception.ValidationException;
 import br.com.ecommerce.util.Translator;
+import jakarta.persistence.NoResultException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     private final Translator translator;
 
@@ -46,5 +50,13 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         Errors errors = new Errors();
         validationException.getErrors().getErrors().forEach(validationError -> errors.addError(new ErrorDescription(validationError.field(), validationError.code(), translator.translate(validationError.code()))));
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(NoResultException.class)
+    protected ResponseEntity<Errors> handleNoResultException(NoResultException noResultException) {
+        log.warn("No result found for query", noResultException);
+        Errors errors = new Errors();
+        errors.addError(new ErrorDescription(null, "resource.not.found", translator.translate("resource.not.found")));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
 }
