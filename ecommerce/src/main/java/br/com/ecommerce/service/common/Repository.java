@@ -5,4 +5,5 @@ import java.util.Optional;
 public interface Repository<E> {
     Optional<E> findById(Long id);
     void add(E entity);
+    void update(E entity);
 }

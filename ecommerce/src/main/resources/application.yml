@@ -31,3 +31,6 @@ jwt:
   private:
     key: classpath:app.key
   issuer: br.com.ecommerce
+ecommerce:
+  storage:
+    provider: fake
