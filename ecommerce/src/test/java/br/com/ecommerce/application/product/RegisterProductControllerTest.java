@@ -80,7 +80,7 @@ class RegisterProductControllerTest extends RequestSender {
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
                 .content(objectMapper.writeValueAsBytes(registerProductCommand)));
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isNoContent())
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(MockMvcResultHandlers.print());
     }
 }

@@ -15,7 +15,7 @@ class ProductEntityManagerRepository extends GenericRepository<Product> implemen
     public boolean belongsTo(Long productId, String subject) {
         try {
             Object result = entityManager.createNativeQuery("""
-                        SELECT count(id) = 1 FROM {h-schema}tb_product product
+                        SELECT count(product.id) = 1 FROM {h-schema}tb_product product
                         INNER JOIN {h-schema}tb_user owner ON product.fk_user_id=owner.id
                         WHERE owner.subject=:subject AND product.id=:productId
                         """, Boolean.class)

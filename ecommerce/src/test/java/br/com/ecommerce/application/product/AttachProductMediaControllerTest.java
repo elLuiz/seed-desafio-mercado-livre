@@ -2,31 +2,39 @@ package br.com.ecommerce.application.product;
 
 import br.com.ecommerce.application.RequestSender;
 import br.com.ecommerce.application.common.WithMockJwt;
+import br.com.ecommerce.application.product.response.ProductCreatedResponse;
 import br.com.ecommerce.application.util.IntegrationTest;
 import br.com.ecommerce.commons.MultipartFactory;
+import br.com.ecommerce.domain.model.product.command.ProductCharacteristics;
+import br.com.ecommerce.domain.model.product.command.RegisterProductCommand;
+import br.com.ecommerce.service.category.CategoryRepository;
 import org.hamcrest.Matchers;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Stream;
 
 @IntegrationTest
+@Sql(scripts = {"/insert-categories.sql", "/insert-users.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @WithMockJwt(roles = {"CREATE_PRODUCT"})
 class AttachProductMediaControllerTest extends RequestSender {
     @MockitoBean
     ProductPermissionValidator productPermissionValidator;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
@@ -97,13 +105,25 @@ class AttachProductMediaControllerTest extends RequestSender {
     }
 
     @Test
+    @WithMockJwt(roles = {"CREATE_PRODUCT"}, subject = "25a5afb1-c754-4038-9631-b04075480b5c")
     void shouldReturn204WhenImagesHaveBeenSuccessfullyAttachedToProduct() throws Exception {
         MockMultipartFile file = MultipartFactory.getMultipartFile("img.png", "src/test/resources/assets/img.png");
         MockMultipartFile file1 = MultipartFactory.getMultipartFile("img1.png", "src/test/resources/assets/img_1.png");
         MockMultipartFile file2 = MultipartFactory.getMultipartFile("img2.png", "src/test/resources/assets/img_2.png");
         MockMultipartFile file3 = MultipartFactory.getMultipartFile("img3.png", "src/test/resources/assets/img_3.png");
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/api/v1/products/{productId}/attachments/medias", 1)
+        RegisterProductCommand registerProductCommand = new RegisterProductCommand("Nike", BigDecimal.valueOf(100), 10, getCharacteristics(new ProductCharacteristics("Size", "44")), "Ein Schuhe", categoryRepository.findByName("Programming").orElseThrow().getId());
+        byte[] response = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
+                .content(objectMapper.writeValueAsBytes(registerProductCommand)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn()
+                .getResponse()
+                .getContentAsByteArray();
+        ProductCreatedResponse productCreatedResponse = objectMapper.readValue(response, ProductCreatedResponse.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/api/v1/products/{productId}/attachments/medias", productCreatedResponse.productId())
                 .file(file)
                 .file(file1)
                 .file(file2)
@@ -112,5 +132,9 @@ class AttachProductMediaControllerTest extends RequestSender {
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    static List<ProductCharacteristics> getCharacteristics(ProductCharacteristics ...productCharacteristics) {
+        return Stream.of(productCharacteristics).toList();
     }
 }
