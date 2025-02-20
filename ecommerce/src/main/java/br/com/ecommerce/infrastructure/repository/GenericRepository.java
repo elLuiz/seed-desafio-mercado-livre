@@ -22,6 +22,11 @@ public class GenericRepository<E extends GenericEntity> implements Repository<E>
     }
 
     @Override
+    public void update(E entity) {
+        entityManager.merge(entity);
+    }
+
+    @Override
     public Optional<E> findById(Long id) {
         return Optional.ofNullable(entityManager.find(entityClass, id));
     }

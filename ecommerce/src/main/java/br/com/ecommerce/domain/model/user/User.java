@@ -45,7 +45,7 @@ public class User extends GenericEntity {
     @JoinColumn(name = "fk_group_id", foreignKey = @ForeignKey(name = "fk_group_id"))
     private Group group;
 
-    private User() {}
+    User() {}
 
     /**
      * Creates a new user

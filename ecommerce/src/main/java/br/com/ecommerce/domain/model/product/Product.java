@@ -43,6 +43,9 @@ public class Product extends GenericEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id")
     private User owner;
+    @CollectionTable(name = "tb_product_media", joinColumns = @JoinColumn(name = "fk_product_id"))
+    @ElementCollection(fetch = FetchType.LAZY)
+    private Set<ProductMedia> medias;
 
     Product() {}
 
@@ -71,7 +74,6 @@ public class Product extends GenericEntity {
         setProductCharacteristics(productCharacteristics);
         setOwner(owner);
     }
-
 
     private void setCategory(Category category) {
         this.category = category;
@@ -119,5 +121,20 @@ public class Product extends GenericEntity {
 
     public Integer getStockQuantity() {
         return stockQuantity;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void addMedia(ProductMedia media) {
+        if (this.medias == null) {
+            this.medias = new HashSet<>();
+        }
+        this.medias.add(media);
+    }
+
+    public Set<ProductMedia> getMedias() {
+        return medias;
     }
 }
