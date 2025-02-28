@@ -1,17 +1,6 @@
 package br.com.ecommerce.domain.model.product.command;
 
+import br.com.ecommerce.domain.model.session.SessionUser;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-public record ReviewProductCommand(@NotNull(message = "rating.must.not.be.null")
-                                   @Min(value = 1, message = "rating.minimum.must.not.be.lesser.than.one")
-                                   @Max(value = 5, message = "rating.maximum.must.not.be.greater.than.five") Integer rating,
-                                   @NotBlank(message = "title.must.not.be.empty")
-                                   @Size(max = 255, message = "title.must.not.exceed.255.characters") String title,
-                                   @NotBlank(message = "description.must.not.empty")
-                                   @Size(max = 500, message = "description.must.not.exceed.500.characters") String description) {
+public record ReviewProductCommand(Long productId, Integer rating, String title, String description, SessionUser author) {
 }

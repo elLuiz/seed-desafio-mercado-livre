@@ -1,6 +1,7 @@
 package br.com.ecommerce.infrastructure.repository;
 
 import br.com.ecommerce.domain.model.product.Product;
+import br.com.ecommerce.domain.model.product.ProductReview;
 import br.com.ecommerce.service.product.ProductRepository;
 import jakarta.persistence.NoResultException;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,27 @@ class ProductEntityManagerRepository extends GenericRepository<Product> implemen
                         """, Boolean.class)
                     .setParameter("subject", subject)
                     .setParameter("productId", productId)
+                    .getSingleResult();
+            return Boolean.TRUE.equals(result);
+        } catch (NoResultException noResultException) {
+            return false;
+        }
+    }
+
+    @Override
+    public void addReview(ProductReview productReview) {
+        entityManager.persist(productReview);
+    }
+
+    @Override
+    public boolean hasUserReviewedProduct(Long productId, Long authorId) {
+        try {
+            Object result = entityManager.createNativeQuery("""
+                        SELECT count(id) > 0 FROM {h-schema}tb_product_review 
+                        WHERE fk_product_id=:productId AND fk_user_id=:authorId
+                        """)
+                    .setParameter("productId", productId)
+                    .setParameter("authorId", authorId)
                     .getSingleResult();
             return Boolean.TRUE.equals(result);
         } catch (NoResultException noResultException) {
