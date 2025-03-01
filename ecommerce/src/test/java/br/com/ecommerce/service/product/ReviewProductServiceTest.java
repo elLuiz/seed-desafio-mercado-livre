@@ -68,10 +68,14 @@ class ReviewProductServiceTest {
     @Test
     void shouldAddReviewToProduct() {
         Product product = Mockito.mock(Product.class);
+        Mockito.when(product.getId())
+                .thenReturn(1L);
         Mockito.when(productRepository.findById(1L))
                 .thenReturn(Optional.of(product));
-        Mockito.doNothing().when(productRepository).addReview(new ProductReview(5, "title", "description", new ProductReviewAuthor(1L), product));
+        Mockito.when(productRepository.hasUserReviewedProduct(1L, sessionUser.id()))
+                .thenReturn(false);
         ReviewProductCommand reviewProductCommand = new ReviewProductCommand(1L, 5, "title", "description", sessionUser);
+
         reviewProductService.reviewProduct(reviewProductCommand);
         Mockito.verify(productRepository, Mockito.times(1)).addReview(new ProductReview(5, "title", "description", new ProductReviewAuthor(1L), product));
     }

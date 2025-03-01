@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+// TODO: Add messages
+// TODO: Improve exception handling and throwing
 public class ReviewProductService {
     private final ProductRepository productRepository;
 
@@ -23,6 +25,9 @@ public class ReviewProductService {
                 .orElseThrow(() -> new EntityNotFoundException("product.not.found"));
         if (productRepository.hasUserReviewedProduct(product.getId(), reviewProductCommand.author().id())) {
             throw new DomainException("author.has.already.reviewed.product");
+        }
+        if (product.isOwnedBy(reviewProductCommand.author().id())) {
+            throw new DomainException("owner.cannot.review.product");
         }
         ProductReview productReview = new ProductReview(reviewProductCommand.rating(), reviewProductCommand.title(), reviewProductCommand.description(), new ProductReviewAuthor(reviewProductCommand.author().id()), product);
         productRepository.addReview(productReview);

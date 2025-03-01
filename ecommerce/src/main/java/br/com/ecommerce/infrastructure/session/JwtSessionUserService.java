@@ -21,7 +21,7 @@ class JwtSessionUserService implements SessionUserService {
     @Override
     public SessionUser loadUserBySubject(String subject) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Jwt jwt) {
-            return new SessionUser(1L, jwt.getClaimAsString("full_name"), SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
+            return new SessionUser(userRepository.getUserIdBySubject(subject).orElseThrow(() -> new IllegalStateException("subject.id.not.found")), jwt.getClaimAsString("full_name"), SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
         }
         throw new IllegalStateException("invalid.session");
     }

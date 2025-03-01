@@ -43,12 +43,6 @@ class ProductReviewControllerTest extends ProductControllerTest {
         );
     }
 
-    /**
-     * TODO: Now the product is being created and reviewed by the same user, which violates our seventh constraint.
-     * How to fix that?
-     * Should we use pre-saved values?
-     * @throws Exception
-     */
     @Test
     @WithMockJwt(roles = {"CREATE_PRODUCT"}, subject = "35f5afb1-c754-4038-9631-b04075480b5c")
     void shouldAddReviewToProduct() throws Exception {
@@ -60,5 +54,17 @@ class ProductReviewControllerTest extends ProductControllerTest {
                 .content(objectMapper.writeValueAsString(new ReviewProductRequest(4, "GOOD, aber TEUER", "The product is really outstanding, but the price is away above market"))))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.notNullValue()));
+    }
+
+    @Test
+    void shouldNotAddReviewToProductWhenProductsOwnerIsTheAuthor() throws Exception {
+        ProductCreatedResponse productCreatedResponse = createProduct();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products/{id}/reviews", productCreatedResponse.productId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US")
+                        .content(objectMapper.writeValueAsString(new ReviewProductRequest(4, "GOOD, aber TEUER", "The product is really outstanding, but the price is away above market"))))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[*].code", Matchers.containsInAnyOrder("owner.cannot.review.product")));
     }
 }

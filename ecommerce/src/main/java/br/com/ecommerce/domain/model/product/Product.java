@@ -137,4 +137,8 @@ public class Product extends GenericEntity {
     public Set<ProductMedia> getMedias() {
         return medias;
     }
+
+    public boolean isOwnedBy(Long userId) {
+        return this.getOwner().getId().equals(userId);
+    }
 }
