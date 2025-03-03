@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-// TODO: Add messages
-// TODO: Improve exception handling and throwing
 public class ReviewProductService {
     private final ProductRepository productRepository;
 
