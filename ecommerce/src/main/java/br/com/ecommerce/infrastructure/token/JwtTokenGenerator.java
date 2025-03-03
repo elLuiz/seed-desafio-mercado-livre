@@ -32,6 +32,7 @@ class JwtTokenGenerator implements TokenGenerator {
                 .expiresAt(Instant.now().plusSeconds(3600))
                 .issuedAt(Instant.now())
                 .subject(user.getSubject())
+                .claim("full_name", user.getFullName())
                 .claim("roles", getRoles(user))
                 .build();
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();

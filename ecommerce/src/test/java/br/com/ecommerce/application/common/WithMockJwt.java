@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @WithSecurityContext(factory = WithMockJwtFactory.class)
 public @interface WithMockJwt {
-    String subject() default "junit-test";
+    String subject() default "25a5afb1-c754-4038-9631-b04075480b5c";
     String[] roles() default {};
     boolean expired() default false;
 }

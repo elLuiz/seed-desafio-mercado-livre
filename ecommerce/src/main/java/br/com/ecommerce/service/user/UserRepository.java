@@ -9,4 +9,6 @@ public interface UserRepository extends Repository<User> {
     Optional<User> findByLogin(String login);
 
     Optional<User> findBySubject(String subject);
+
+    Optional<Long> getUserIdBySubject(String subject);
 }

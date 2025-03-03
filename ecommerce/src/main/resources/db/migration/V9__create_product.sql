@@ -3,7 +3,7 @@ CREATE SEQUENCE IF NOT EXISTS ecommerce.seq_product_id START WITH 1 INCREMENT BY
 CREATE TABLE IF NOT EXISTS ecommerce.tb_product (
     id bigint PRIMARY KEY DEFAULT nextval('ecommerce.seq_product_id'),
     name varchar(255) NOT NULL,
-    price double precision NOT NULL CHECK (price >= 2.0),
+    price numeric(12, 2) NOT NULL CHECK (price >= 2.0),
     stock_quantity int NOT NULL CHECK(stock_quantity >= 0),
     description text NOT NULL,
     fk_category_id bigint NOT NULL,

@@ -2,6 +2,7 @@ package br.com.ecommerce.infrastructure.repository;
 
 import br.com.ecommerce.domain.model.user.User;
 import br.com.ecommerce.service.user.UserRepository;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -36,5 +37,19 @@ class UserEntityManagerRepository extends GenericRepository<User> implements Use
         return Optional.ofNullable(entityManager.createQuery(query, User.class)
                 .setParameter("subject", subject)
                 .getSingleResult());
+    }
+
+    @Override
+    public Optional<Long> getUserIdBySubject(String subject) {
+        Query query = entityManager.createNativeQuery("""
+                        SELECT id FROM {h-schema}tb_user
+                        WHERE UPPER(TRIM(subject)) = UPPER(TRIM(:subject))
+                        """)
+                .setParameter("subject", subject);
+        Object result = query.getSingleResult();
+        if (result instanceof Long userId) {
+            return Optional.of(userId);
+        }
+        return Optional.empty();
     }
 }

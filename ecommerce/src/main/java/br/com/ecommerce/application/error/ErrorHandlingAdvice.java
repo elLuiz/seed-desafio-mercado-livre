@@ -2,6 +2,7 @@ package br.com.ecommerce.application.error;
 
 import br.com.ecommerce.application.common.ErrorDescription;
 import br.com.ecommerce.application.common.Errors;
+import br.com.ecommerce.domain.exception.DomainException;
 import br.com.ecommerce.domain.exception.ValidationException;
 import br.com.ecommerce.util.Translator;
 import jakarta.persistence.NoResultException;
@@ -58,5 +59,13 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         Errors errors = new Errors();
         errors.addError(new ErrorDescription(null, "resource.not.found", translator.translate("resource.not.found")));
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
+    @ExceptionHandler(DomainException.class)
+    protected ResponseEntity<Errors> handleNoResultException(DomainException domainException) {
+        log.warn("Domain exception", domainException);
+        Errors errors = new Errors();
+        errors.addError(new ErrorDescription(null, domainException.getMessage(), translator.translate(domainException.getMessage())));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
