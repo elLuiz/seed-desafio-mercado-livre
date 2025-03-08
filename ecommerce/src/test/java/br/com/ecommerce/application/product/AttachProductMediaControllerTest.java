@@ -13,15 +13,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @IntegrationTest
-@Sql(scripts = {"/insert-categories.sql", "/insert-users.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @WithMockJwt(roles = {"CREATE_PRODUCT"})
-class AttachProductMediaControllerTest extends ProductControllerTest {
+class AttachProductMediaControllerTest extends ProductControllerRequestSender {
     @MockitoBean
     ProductPermissionValidator productPermissionValidator;
     @BeforeEach

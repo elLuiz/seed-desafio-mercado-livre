@@ -4,7 +4,7 @@ import br.com.ecommerce.domain.common.validation.ValidationErrors;
 import br.com.ecommerce.domain.exception.ValidationException;
 import br.com.ecommerce.domain.model.category.Category;
 import br.com.ecommerce.domain.model.product.Product;
-import br.com.ecommerce.domain.model.user.User;
+import br.com.ecommerce.domain.model.session.SessionUser;
 import br.com.ecommerce.service.category.CategoryRepository;
 import br.com.ecommerce.domain.model.product.command.RegisterProductCommand;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ public class RegisterProductService {
     }
 
     @Transactional
-    public Product register(RegisterProductCommand registerProductCommand, User owner) {
+    public Product register(RegisterProductCommand registerProductCommand, SessionUser sessionUser) {
         Category category = categoryRepository.findById(registerProductCommand.categoryId()).orElseThrow(() -> new ValidationException(ValidationErrors.single("categoryId", "category.not.found")));
-        Product product = new Product(category, registerProductCommand.description(), registerProductCommand.price(), registerProductCommand.name(), registerProductCommand.stockQuantity(), registerProductCommand.convertCharacteristics(), owner);
+        Product product = new Product(category, registerProductCommand.description(), registerProductCommand.price(), registerProductCommand.name(), registerProductCommand.stockQuantity(), registerProductCommand.convertCharacteristics(), sessionUser.id());
         productRepository.add(product);
         return product;
     }

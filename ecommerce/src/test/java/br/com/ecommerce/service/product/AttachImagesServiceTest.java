@@ -6,8 +6,6 @@ import br.com.ecommerce.domain.model.product.Product;
 import br.com.ecommerce.domain.model.product.ProductCharacteristic;
 import br.com.ecommerce.domain.model.user.User;
 import br.com.ecommerce.infrastructure.storage.FakeStorageService;
-import br.com.ecommerce.service.common.Storage;
-import br.com.ecommerce.service.common.StorageFile;
 import jakarta.persistence.EntityNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -37,7 +35,7 @@ class AttachImagesServiceTest {
 
     @Test
     void shouldAttachMediasToProduct() throws Exception {
-        Product product = new Product(new Category("Programming"), "A brief description", BigDecimal.valueOf(20.9), "C#", 10, List.of(new ProductCharacteristic("Genre", "Science & Technology")), Mockito.mock(User.class));
+        Product product = new Product(new Category("Programming"), "A brief description", BigDecimal.valueOf(20.9), "C#", 10, List.of(new ProductCharacteristic("Genre", "Science & Technology")), 1L);
         Mockito.when(productRepository.findById(1L))
                 .thenReturn(Optional.of(product));
         Mockito.doNothing().when(productRepository).update(product);

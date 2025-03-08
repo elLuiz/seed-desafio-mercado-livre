@@ -8,6 +8,7 @@ import br.com.ecommerce.domain.model.product.Product;
 import br.com.ecommerce.domain.model.product.ProductCharacteristic;
 import br.com.ecommerce.domain.model.product.command.ProductCharacteristics;
 import br.com.ecommerce.domain.model.product.command.RegisterProductCommand;
+import br.com.ecommerce.domain.model.session.SessionUser;
 import br.com.ecommerce.domain.model.user.User;
 import br.com.ecommerce.infrastructure.hashing.BcryptPasswordHashingAlgorithm;
 import br.com.ecommerce.service.category.CategoryRepository;
@@ -45,7 +46,7 @@ class RegisterProductServiceTest {
         Mockito.doNothing().when(productRepository).add(Mockito.any(Product.class));
 
         RegisterProductCommand registerProductCommand = new RegisterProductCommand("Java for Kindergarten", BigDecimal.valueOf(2.50), 10, List.of(new ProductCharacteristics("Pages", "200")), "Java for young developers", 10L);
-        User owner = new User("login@login.com", "Verstappen", "Asseto@23", Mockito.mock(BcryptPasswordHashingAlgorithm.class), new Group("CUSTOMER", "Customer Group"));
+        SessionUser owner = new SessionUser(1L, "Verstappen", Set.of("CREATE_PRODUCT"));
         Product product = registerProductService.register(registerProductCommand, owner);
         Assertions.assertAll(() -> {
             Assertions.assertEquals("Java for Kindergarten", product.getProductName());
@@ -62,7 +63,7 @@ class RegisterProductServiceTest {
                 .thenReturn(Optional.empty());
 
         RegisterProductCommand registerProductCommand = new RegisterProductCommand("Java for Kindergarten", BigDecimal.valueOf(2.50), 10, List.of(new ProductCharacteristics("Pages", "200")), "Java for young developers", 10L);
-        User owner = new User("login@login.com", "Verstappen", "Asseto@23", Mockito.mock(BcryptPasswordHashingAlgorithm.class), new Group("CUSTOMER", "Customer Group"));
+        SessionUser owner = new SessionUser(1L, "Verstappen", Set.of("CREATE_PRODUCT"));
         Assertions.assertThrows(ValidationException.class, () -> registerProductService.register(registerProductCommand, owner));
     }
 }

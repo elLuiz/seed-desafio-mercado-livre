@@ -3,7 +3,6 @@ package br.com.ecommerce.domain.model.product;
 import br.com.ecommerce.domain.exception.ValidationException;
 import br.com.ecommerce.domain.model.GenericEntity;
 import br.com.ecommerce.domain.model.category.Category;
-import br.com.ecommerce.domain.model.user.User;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -40,9 +39,8 @@ public class Product extends GenericEntity {
     @CollectionTable(name = "tb_product_characteristic", joinColumns = @JoinColumn(name = "fk_product_id"))
     @ElementCollection(fetch = FetchType.LAZY)
     private Set<ProductCharacteristic> productCharacteristics;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user_id")
-    private User owner;
+    @Column(name = "fk_user_id", nullable = false)
+    private Long owner;
     @CollectionTable(name = "tb_product_media", joinColumns = @JoinColumn(name = "fk_product_id"))
     @ElementCollection(fetch = FetchType.LAZY)
     private Set<ProductMedia> medias;
@@ -55,7 +53,7 @@ public class Product extends GenericEntity {
                    String productName,
                    Integer stockQuantity,
                    List<ProductCharacteristic> productCharacteristics,
-                   User owner) {
+                   Long ownerId) {
         new ProductValidator()
                 .checkValidDescription(description)
                 .checkValidPrice(price)
@@ -63,7 +61,7 @@ public class Product extends GenericEntity {
                 .checkValidStockQuantity(stockQuantity)
                 .checkValidCategory(category)
                 .checkCharacteristics(productCharacteristics)
-                .checkOwner(owner)
+                .checkOwner(ownerId)
                 .evaluate()
                 .orElseThrow(ValidationException::new);
         setCategory(category);
@@ -72,7 +70,7 @@ public class Product extends GenericEntity {
         setProductName(productName);
         setStockQuantity(stockQuantity);
         setProductCharacteristics(productCharacteristics);
-        setOwner(owner);
+        setOwnerId(ownerId);
     }
 
     private void setCategory(Category category) {
@@ -99,7 +97,7 @@ public class Product extends GenericEntity {
         this.productCharacteristics = new HashSet<>(productCharacteristics);
     }
 
-    private void setOwner(User owner) {
+    private void setOwnerId(Long owner) {
         this.owner = owner;
     }
 
@@ -123,7 +121,7 @@ public class Product extends GenericEntity {
         return stockQuantity;
     }
 
-    public User getOwner() {
+    public Long getOwner() {
         return owner;
     }
 
@@ -139,6 +137,6 @@ public class Product extends GenericEntity {
     }
 
     public boolean isOwnedBy(Long userId) {
-        return this.getOwner().getId().equals(userId);
+        return this.getOwner() != null && this.getOwner().equals(userId);
     }
 }
