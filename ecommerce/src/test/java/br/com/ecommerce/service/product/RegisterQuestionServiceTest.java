@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,11 +30,13 @@ class RegisterQuestionServiceTest {
     ProductRepository productRepository;
     @Mock
     PasswordHashing passwordHashing;
+    @Mock
+    ApplicationEventPublisher applicationEventPublisher;
     RegisterQuestionService registerQuestionService;
 
     @BeforeEach
     void setUp() {
-        this.registerQuestionService = new RegisterQuestionService(productRepository);
+        this.registerQuestionService = new RegisterQuestionService(productRepository, applicationEventPublisher);
     }
 
     @Test
