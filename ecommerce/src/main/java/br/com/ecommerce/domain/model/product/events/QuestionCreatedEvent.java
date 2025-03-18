@@ -1,18 +1,18 @@
 package br.com.ecommerce.domain.model.product.events;
 
 import br.com.ecommerce.domain.model.common.DomainEvent;
+import br.com.ecommerce.domain.model.product.ProductQuestion;
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Getter
-public class QuestionCreatedEvent extends DomainEvent {
-    private final Long id;
+public class QuestionCreatedEvent extends DomainEvent<Long> {
     private final String ownerEmail;
     private final String question;
 
     public QuestionCreatedEvent(Long id, String ownerEmail, String question) {
-        this.id = id;
+        super(id, ProductQuestion.class.getSimpleName(), "product.question.created");
         this.ownerEmail = ownerEmail;
         this.question = question;
     }
@@ -23,11 +23,11 @@ public class QuestionCreatedEvent extends DomainEvent {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         QuestionCreatedEvent that = (QuestionCreatedEvent) o;
-        return Objects.equals(id, that.id) && Objects.equals(ownerEmail, that.ownerEmail) && Objects.equals(question, that.question);
+        return Objects.equals(ownerEmail, that.ownerEmail) && Objects.equals(question, that.question);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, ownerEmail, question);
+        return Objects.hash(super.hashCode(), ownerEmail, question);
     }
 }

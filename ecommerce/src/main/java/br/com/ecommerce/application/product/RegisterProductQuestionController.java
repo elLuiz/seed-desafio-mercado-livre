@@ -1,5 +1,6 @@
 package br.com.ecommerce.application.product;
 
+import br.com.ecommerce.application.common.ResourceCreatedResponse;
 import br.com.ecommerce.application.product.request.ProductQuestionRequest;
 import br.com.ecommerce.application.product.response.ProductQuestionCreatedResponse;
 import br.com.ecommerce.domain.model.product.ProductQuestion;
@@ -8,7 +9,6 @@ import br.com.ecommerce.domain.model.session.SessionUser;
 import br.com.ecommerce.service.common.SessionUserService;
 import br.com.ecommerce.service.product.RegisterQuestionService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,6 +37,6 @@ public class RegisterProductQuestionController {
                                                    @RequestBody @Valid ProductQuestionRequest productQuestionRequest) {
         SessionUser sessionUser = sessionUserService.loadUserBySubject(jwt.getSubject());
         ProductQuestion productQuestion = registerQuestionService.registerQuestion(new RegisterQuestionCommand(sessionUser, productId, productQuestionRequest.question()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(ProductQuestionCreatedResponse.toResponse(productQuestion));
+        return ResourceCreatedResponse.created(ProductQuestionCreatedResponse.toResponse(productQuestion), "/{id}", productId, productQuestion.getId());
     }
 }

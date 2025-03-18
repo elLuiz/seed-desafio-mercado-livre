@@ -1,5 +1,6 @@
 package br.com.ecommerce.application.product;
 
+import br.com.ecommerce.application.common.ResourceCreatedResponse;
 import br.com.ecommerce.application.product.response.ProductCreatedResponse;
 import br.com.ecommerce.domain.model.product.Product;
 import br.com.ecommerce.domain.model.product.command.RegisterProductCommand;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -35,12 +35,6 @@ public class RegisterProductController {
     public ResponseEntity<Object> register(@RequestBody @Valid RegisterProductCommand registerProductCommand, @AuthenticationPrincipal Jwt jwt) {
         SessionUser owner = this.sessionUserService.loadUserBySubject(jwt.getSubject());
         Product product = registerProductService.register(registerProductCommand, owner);
-        return ResponseEntity.created(ServletUriComponentsBuilder
-                        .fromCurrentRequest()
-                        .path("/{id}")
-                        .buildAndExpand(product.getId())
-                        .toUri()
-                )
-                .body(ProductCreatedResponse.toResponse(product));
+        return ResourceCreatedResponse.created(ProductCreatedResponse.toResponse(product), "/{id}", product.getId());
     }
 }

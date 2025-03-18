@@ -28,6 +28,14 @@ Later, another process or a CDC mechanism, such as _Debezium_, can read the entr
    1. The polling can be a background job or a dedicated service.
 5. Delete the old entries from the table;
 
+### Topic
+The event's description must be explicitly defined in a _.yml_ file. There, a corresponding topic name must be given to the description. For example:
+```yaml
+product:
+  question:
+    created: name-of-the-topic-for-this-event
+```
+
 ## Consequences
 The outbox pattern has been highly used in microservices architectures, where dual writes are common. It solves the problem by using the atomicity guarantee provided by
 most relational databases. This solution comes with the following drawbacks:
