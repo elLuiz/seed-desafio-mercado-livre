@@ -2,12 +2,15 @@ package br.com.ecommerce.infrastructure.repository;
 
 import br.com.ecommerce.domain.model.common.DomainEvent;
 import br.com.ecommerce.infrastructure.listener.EventRepository;
+import br.com.ecommerce.tasks.converter.EventTupleConverter;
+import br.com.ecommerce.tasks.model.Event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.core.env.Environment;
+import jakarta.persistence.Tuple;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +20,9 @@ class OutboxEntityManagerRepository implements EventRepository {
     @PersistenceContext
     EntityManager entityManager;
     private final ObjectMapper objectMapper;
-    private final Environment environment;
 
-    public OutboxEntityManagerRepository(ObjectMapper objectMapper, Environment environment) {
+    public OutboxEntityManagerRepository(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.environment = environment;
     }
 
     @Override
@@ -33,7 +34,7 @@ class OutboxEntityManagerRepository implements EventRepository {
                     VALUES (:topic, :aggregateId, :aggregateType, CAST(:payload AS jsonb))
                     """;
             int insertedRows = entityManager.createNativeQuery(query)
-                    .setParameter("topic", environment.getProperty(domainEvent.getDescription()))
+                    .setParameter("topic", domainEvent.getDescription())
                     .setParameter("aggregateId", domainEvent.getId())
                     .setParameter("aggregateType", domainEvent.getType())
                     .setParameter("payload", payload)
@@ -52,5 +53,33 @@ class OutboxEntityManagerRepository implements EventRepository {
                 .setParameter("aggregateId", id.toString())
                 .getSingleResult();
         return (Long) result;
+    }
+
+    @Override
+    public List<Event> loadUnpublished() {
+        String query = """
+                SELECT id, topic, aggregate_id, payload, published
+                FROM {h-schema}tb_outbox_table
+                WHERE published=false
+                ORDER BY id DESC
+                """;
+        List<Tuple> tuples = entityManager.createNativeQuery(query, Tuple.class).getResultList();
+        return EventTupleConverter.convert(tuples);
+    }
+
+    @Override
+    public void published(Long id) {
+        String query = """
+                UPDATE {h-schema}tb_outbox_table SET published=true
+                WHERE id=:id
+                """;
+        int rows = entityManager.createNativeQuery(query)
+                .setParameter("id", id)
+                .executeUpdate();
+        if (rows > 0) {
+            LOGGER.log(Level.INFO, "Successfully updated event {0} to published", id);
+        } else {
+            LOGGER.log(Level.WARNING, "Could not update event {0}", id);
+        }
     }
 }
