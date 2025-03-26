@@ -3,7 +3,6 @@ package br.com.ecommerce.domain.model.product;
 import br.com.ecommerce.domain.common.validation.StepValidator;
 import br.com.ecommerce.domain.common.validation.ValidationErrors;
 import br.com.ecommerce.domain.model.category.Category;
-import br.com.ecommerce.domain.model.user.User;
 import br.com.ecommerce.util.Either;
 import br.com.ecommerce.util.StringUtils;
 
@@ -65,7 +64,7 @@ class ProductValidator extends StepValidator {
         return this;
     }
 
-    public ProductValidator checkOwner(User owner) {
+    public ProductValidator checkOwner(Long owner) {
         if (owner == null) {
             validationErrors.add("owner", "owner.must.not.be.null");
         }

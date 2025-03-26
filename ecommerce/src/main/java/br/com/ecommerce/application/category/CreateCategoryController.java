@@ -1,6 +1,7 @@
 package br.com.ecommerce.application.category;
 
 import br.com.ecommerce.application.category.dto.CategoryCreatedResponse;
+import br.com.ecommerce.application.common.ResourceCreatedResponse;
 import br.com.ecommerce.domain.model.category.Category;
 import br.com.ecommerce.service.category.CreateCategoryService;
 import br.com.ecommerce.service.category.command.CreateCategoryCommand;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -27,10 +27,6 @@ public class CreateCategoryController {
     @PreAuthorize("hasAuthority('CREATE_CATEGORY')")
     public ResponseEntity<CategoryCreatedResponse> create(@RequestBody @Valid CreateCategoryCommand createCategoryCommand) {
         Category category = createCategoryService.save(createCategoryCommand);
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(category.getId())
-                .toUri())
-                .body(CategoryCreatedResponse.toResponse(category));
+        return ResourceCreatedResponse.created(CategoryCreatedResponse.toResponse(category), "/{id}", category.getId());
     }
 }

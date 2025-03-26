@@ -1,6 +1,7 @@
 package br.com.ecommerce.infrastructure.repository;
 
 import br.com.ecommerce.domain.model.product.Product;
+import br.com.ecommerce.domain.model.product.ProductQuestion;
 import br.com.ecommerce.domain.model.product.ProductReview;
 import br.com.ecommerce.service.product.ProductRepository;
 import jakarta.persistence.NoResultException;
@@ -48,5 +49,10 @@ class ProductEntityManagerRepository extends GenericRepository<Product> implemen
         } catch (NoResultException noResultException) {
             return false;
         }
+    }
+
+    @Override
+    public void addQuestion(ProductQuestion productQuestion) {
+        entityManager.persist(productQuestion);
     }
 }

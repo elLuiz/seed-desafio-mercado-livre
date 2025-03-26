@@ -2,7 +2,6 @@ package br.com.ecommerce.application.product;
 
 import br.com.ecommerce.application.RequestSender;
 import br.com.ecommerce.application.common.JwtFactory;
-import br.com.ecommerce.application.common.WithMockJwt;
 import br.com.ecommerce.application.product.response.ProductCreatedResponse;
 import br.com.ecommerce.domain.model.product.command.ProductCharacteristics;
 import br.com.ecommerce.domain.model.product.command.RegisterProductCommand;
@@ -10,6 +9,7 @@ import br.com.ecommerce.service.category.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -17,7 +17,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class ProductControllerTest extends RequestSender {
+@Sql(scripts = {"/insert-categories.sql", "/insert-users.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+public abstract class ProductControllerRequestSender extends RequestSender {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired

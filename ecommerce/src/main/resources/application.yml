@@ -25,6 +25,9 @@ spring:
     enabled: true
     schemas: ecommerce
     baselineOnMigrate: true
+  rabbitmq:
+    password: password
+    username: rabbitmq
 jwt:
   public:
     key: classpath:app_public.key

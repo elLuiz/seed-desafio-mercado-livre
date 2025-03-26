@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 class ProductValidatorTest {
     @ParameterizedTest
     @MethodSource("provideInvalidData")
-    void shouldReturnErrorsForInvalidInput(String description, BigDecimal price, String name, Integer quantity, Category category, List<ProductCharacteristic> characteristics, User owner, Set<String> expectedErrors) {
+    void shouldReturnErrorsForInvalidInput(String description, BigDecimal price, String name, Integer quantity, Category category, List<ProductCharacteristic> characteristics, Long owner, Set<String> expectedErrors) {
         Either<ValidationErrors, Boolean> evaluate = new ProductValidator()
                 .checkValidDescription(description)
                 .checkValidPrice(price)
@@ -59,7 +59,7 @@ class ProductValidatorTest {
                 .checkValidStockQuantity(1)
                 .checkValidCategory(new Category("Informatics"))
                 .checkCharacteristics(getCharacteristics(new ProductCharacteristic("Language", "Java, C#")))
-                .checkOwner(new User("email@email.com", "Name", "Password@12", new BcryptPasswordHashingAlgorithm(new BCryptPasswordEncoder(12)), new Group("USER", "User")))
+                .checkOwner(10L)
                 .evaluate();
 
         Assertions.assertTrue(evaluate.valid());

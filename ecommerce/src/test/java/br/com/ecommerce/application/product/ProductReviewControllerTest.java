@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @IntegrationTest
-@Sql(scripts = {"/insert-categories.sql", "/insert-users.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @WithMockJwt(roles = {"CREATE_PRODUCT"})
-class ProductReviewControllerTest extends ProductControllerTest {
+class ProductReviewControllerTest extends ProductControllerRequestSender {
     @ParameterizedTest
     @MethodSource("provideReviewWithInvalidInput")
     void shouldReturnBadRequestWhenReviewInputIsInvalid(ReviewProductRequest reviewProductRequest, List<String> expectedCodes) throws Exception {

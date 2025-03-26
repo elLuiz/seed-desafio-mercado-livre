@@ -1,5 +1,6 @@
 package br.com.ecommerce.application.user;
 
+import br.com.ecommerce.application.common.ResourceCreatedResponse;
 import br.com.ecommerce.application.user.dto.UserCreatedResponse;
 import br.com.ecommerce.domain.command.CreateAccountCommand;
 import br.com.ecommerce.domain.model.user.User;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -25,10 +25,6 @@ public class CreateAccountController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> register(@Valid @RequestBody CreateAccountCommand createAccountCommand) {
         User user = registerAccountService.register(createAccountCommand);
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(user.getId())
-                    .toUri())
-                .body(UserCreatedResponse.toResponse(user));
+        return ResourceCreatedResponse.created(UserCreatedResponse.toResponse(user), "/{id}", user.getId());
     }
 }
