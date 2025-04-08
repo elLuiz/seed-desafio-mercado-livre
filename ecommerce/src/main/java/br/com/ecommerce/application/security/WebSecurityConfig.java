@@ -36,6 +36,7 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
                 .requestMatchers(HttpMethod.POST, "api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/accounts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/{id}").permitAll()
                 .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtRolesConverter())))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
