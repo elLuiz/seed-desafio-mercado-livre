@@ -1,8 +1,10 @@
 package br.com.ecommerce.infrastructure.repository;
 
+import br.com.ecommerce.domain.model.product.Owner;
 import br.com.ecommerce.domain.model.product.Product;
 import br.com.ecommerce.domain.model.product.ProductQuestion;
 import br.com.ecommerce.domain.model.product.ProductReview;
+import br.com.ecommerce.domain.model.product.ProductStockStatus;
 import br.com.ecommerce.service.product.ProductRepository;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -101,5 +103,29 @@ class ProductEntityManagerRepository extends GenericRepository<Product> implemen
         return entityManager.createQuery(query, ProductReview.class)
                 .setParameter(PRODUCT_ID, productId)
                 .getResultList();
+    }
+
+    @Override
+    public ProductStockStatus deductStockAmount(Long productId, int quantity) {
+        String query = """
+                UPDATE {h-schema}tb_product SET stock_quantity = stock_quantity - :quantity
+                WHERE id=:productId AND stock_quantity>=:quantity
+                """;
+        int rowsAffected = entityManager.createNativeQuery(query)
+                .setParameter("productId", productId)
+                .setParameter("quantity", quantity)
+                .executeUpdate();
+        return rowsAffected > 0 ? ProductStockStatus.DEDUCTED : ProductStockStatus.OUT_OF_STOCK;
+    }
+
+    @Override
+    public Owner getOwner(Long ownerId) {
+        String query = """
+                SELECT new br.com.ecommerce.domain.model.product.Owner(id, fullName, login) FROM User
+                WHERE id = :ownerId
+                """;
+        return entityManager.createQuery(query, Owner.class)
+                .setParameter("ownerId", ownerId)
+                .getSingleResult();
     }
 }

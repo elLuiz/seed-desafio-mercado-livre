@@ -1,8 +1,10 @@
 package br.com.ecommerce.service.product;
 
+import br.com.ecommerce.domain.model.product.Owner;
 import br.com.ecommerce.domain.model.product.Product;
 import br.com.ecommerce.domain.model.product.ProductQuestion;
 import br.com.ecommerce.domain.model.product.ProductReview;
+import br.com.ecommerce.domain.model.product.ProductStockStatus;
 import br.com.ecommerce.service.common.Repository;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface ProductRepository extends Repository<Product> {
     void addQuestion(ProductQuestion productQuestion);
     List<ProductQuestion> loadQuestionsByProductId(Long productId);
     List<ProductReview> loadReviewsByProductId(Long productId);
+    ProductStockStatus deductStockAmount(Long productId, int quantity);
+    Owner getOwner(Long ownerId);
 }

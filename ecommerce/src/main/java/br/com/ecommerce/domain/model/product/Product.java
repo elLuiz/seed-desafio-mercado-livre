@@ -139,4 +139,8 @@ public class Product extends GenericEntity {
     public boolean isOwnedBy(Long userId) {
         return this.getOwner() != null && this.getOwner().equals(userId);
     }
+
+    public ProductStockStatus getAvailability() {
+        return ProductStockStatus.convert(this.getStockQuantity());
+    }
 }
