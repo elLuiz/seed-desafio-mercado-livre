@@ -25,6 +25,10 @@ public class Money {
         this.value = value;
     }
 
+    public Money multiply(int quantity) {
+        return new Money(this.getValue().multiply(BigDecimal.valueOf(quantity)));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
