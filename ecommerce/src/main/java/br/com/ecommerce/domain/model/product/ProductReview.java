@@ -23,7 +23,7 @@ public class ProductReview extends GenericEntity {
     @Embedded
     private ProductReviewAuthor author;
     @Column(name = "fk_product_id", nullable = false)
-    private Long product;
+    private Long productId;
 
     ProductReview() {}
 
@@ -40,7 +40,7 @@ public class ProductReview extends GenericEntity {
         this.title = title;
         this.description = description;
         this.author = author;
-        this.product = product.getId();
+        this.productId = product.getId();
     }
 
     @Override
@@ -48,11 +48,11 @@ public class ProductReview extends GenericEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductReview that = (ProductReview) o;
-        return rating == that.rating && Objects.equals(author, that.author) && Objects.equals(product, that.product);
+        return rating == that.rating && Objects.equals(author, that.author) && Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rating, author, product);
+        return Objects.hash(rating, author, productId);
     }
 }

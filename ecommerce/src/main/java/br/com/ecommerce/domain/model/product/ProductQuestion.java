@@ -20,7 +20,8 @@ public class ProductQuestion extends GenericEntity {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
-    // TODO: Validator
+    ProductQuestion() {}
+
     public ProductQuestion(String question, Long productId, Long userId) {
         this.question = question.trim();
         this.productId = productId;
