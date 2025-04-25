@@ -39,7 +39,7 @@ public class PlaceOrderService {
         if (ProductStockStatus.OUT_OF_STOCK.equals(product.getAvailability()) || ProductStockStatus.OUT_OF_STOCK.equals(productRepository.deductStockAmount(product.getId(), createOrderCommand.quantity()))) {
             throw PRODUCT_OUT_OF_STOCK;
         }
-        Order order = new Order(createOrderCommand.sessionUser().id(), createOrderCommand.paymentGateway(), createOrderCommand.quantity(), product);
+        Order order = Order.place(createOrderCommand.sessionUser().id(), createOrderCommand.paymentGateway(), createOrderCommand.quantity(), product);
         this.orderRepository.add(order);
         this.publisher.publishEvent(new OrderCreated(order, product, this.productRepository.getOwner(product.getOwner())));
         return OrderDetails.convert(order, paymentMediator.pay(order, createOrderCommand.paymentGateway()));

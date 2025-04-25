@@ -1,6 +1,7 @@
 package br.com.ecommerce.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -43,7 +44,9 @@ public class RequestSender {
     @DynamicPropertySource
     static void dbProperties(DynamicPropertyRegistry registry) {
         System.setProperty("SHOW_SQL", "true");
-        registry.add("spring.datasource.url", () -> postgreSQLContainer.getJdbcUrl());
+        System.setProperty("PAG_SEGURO_REDIRECT_URL", "http://fake-junti.pagseguro.br");
+        System.setProperty("PAYPAL_REDIRECT_URL", "http://fake-junti.paypal.br");
+        System.setProperty("CALLBACK_URL", "http://localhost:8080");     registry.add("spring.datasource.url", () -> postgreSQLContainer.getJdbcUrl());
         registry.add("spring.datasource.username", () -> postgreSQLContainer.getUsername());
         registry.add("spring.datasource.password", () -> postgreSQLContainer.getPassword());
     }

@@ -14,16 +14,16 @@ class PayPalGateway implements Gateway {
     private final String link;
     private final String callbackLink;
 
-    public PayPalGateway(@Value("ecommerce.payment.paypal.redirect-uri") String link,
-                         @Value("ecommerce.payment.callback-uri") String callbackLink) {
+    public PayPalGateway(@Value("${ecommerce.payment.paypal.redirect-uri}") String link,
+                         @Value("${ecommerce.payment.callback-uri}") String callbackLink) {
         this.link = link;
         this.callbackLink = callbackLink;
     }
 
     @Override
     public OrderPayment process(Order order) {
-        return new OrderPayment(order.getId(), link.replace("#orderId", order.getUniqueId())
-                .replace("#redirectURL", ""), OffsetDateTime.now());
+        return new OrderPayment(order.getId(), link.replace("#orderId", order.getPurchaseId())
+                .replace("#redirectURL", callbackLink.replace("#orderId", order.getPurchaseId())), OffsetDateTime.now());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package br.com.ecommerce.domain.model.order;
 
+import br.com.ecommerce.domain.exception.ValidationException;
 import br.com.ecommerce.domain.model.GenericEntity;
 import br.com.ecommerce.domain.model.product.Money;
 import br.com.ecommerce.domain.model.product.Product;
@@ -35,15 +36,28 @@ public class Order extends GenericEntity {
     @AttributeOverride(name = "value", column = @Column(name = "price", nullable = false))
     private Money price;
     @Column(name = "order_unique_id", nullable = false)
-    private String uniqueId;
+    private String purchaseId;
+    @Column(name = "order_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
-    public Order(Long customerId, PaymentGateway paymentGateway, Integer quantity, Product product) {
-        this.customerId = customerId;
-        this.paymentGateway = paymentGateway;
-        this.productId = product.getId();
-        this.price = product.getPrice();
-        this.quantity = quantity;
-        this.purchasedAt = OffsetDateTime.now(ZoneId.of("UTC"));
-        this.uniqueId = UUID.randomUUID().toString();
+    public static Order place(Long customerId, PaymentGateway paymentGateway, Integer quantity, Product product) {
+        new OrderValidator()
+                .checkCustomer(customerId)
+                .checkPaymentMethod(paymentGateway)
+                .checkQuantity(quantity)
+                .checkProduct(product)
+                .evaluate()
+                .orElseThrow(ValidationException::new);
+        Order order = new Order();
+        order.customerId = customerId;
+        order.paymentGateway = paymentGateway;
+        order.productId = product.getId();
+        order.price = product.getPrice();
+        order.quantity = quantity;
+        order.purchasedAt = OffsetDateTime.now(ZoneId.of("UTC"));
+        order.purchaseId = UUID.randomUUID().toString();
+        order.orderStatus = OrderStatus.PAYMENT_PENDING;
+        return order;
     }
 }
