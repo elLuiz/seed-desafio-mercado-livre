@@ -6,6 +6,7 @@ import br.com.ecommerce.application.product.response.ProductCreatedResponse;
 import br.com.ecommerce.domain.model.product.command.ProductCharacteristics;
 import br.com.ecommerce.domain.model.product.command.RegisterProductCommand;
 import br.com.ecommerce.service.category.CategoryRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

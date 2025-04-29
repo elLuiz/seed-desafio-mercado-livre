@@ -19,7 +19,7 @@ public class OrderCreated extends DomainEvent<Long> {
     private final OffsetDateTime purchasedAt;
 
     public OrderCreated(Order order, Product product, Owner owner) {
-        super(order.getId(), Order.class.getSimpleName(), "order.created");
+        super(order.getId(), Order.class.getSimpleName(), "order.placed");
         this.productId = product.getId();
         this.productName = product.getProductName();
         this.price = product.getPrice().getValue();

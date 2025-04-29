@@ -12,7 +12,7 @@ The system must allow customers to check out via PayPal or PagSeguro. After chec
 
 ## FR 01 - Checkout
 
-When a customer selects a product, the system must show two buttons for payment: “Pay with PayPal” or “Pay with PagSeguro”. Upon clicking the desired provider, the system must redirect the user to the appropriate payment page. After the payment process (whether successful or failed), the customer is redirected back to the order details page.
+When a customer selects a product, the system must show two buttons for payment: “Pay with PayPal” and “Pay with PagSeguro”. Upon clicking the desired provider, the system must redirect the user to the appropriate payment page. After the payment process (whether successful or failed), the customer is redirected back to the order details page.
 
 ### Acceptance Criteria
 
@@ -67,15 +67,15 @@ The architecture to implement this workflow is shown in Figure 1. As soon as the
 
 ![Architecture](../assets/stories/009_rnf_3.png)
 
-The Redis server is used to store idempotency keys to avoid duplicate messaging processing, thus mitigating the risk of sending duplicate emails to users.
+The Redis server is used to store idempotency keys; avoiding duplicate messaging processing, thus mitigating the risk of sending duplicate emails to users.
 
 # Steps
 - [x] Create controller to receive requests;
 - [x] The request payload must accept the following properties: Product ID, quantity, selected gateway.
 - [x] Create the service layer;
-- [x] If the product does not exist, the request should be stopped;
+- [x] If the product does not exist, the request should be rejected;
 - [x] Create the order details class;
-  - Create the validator;
+  - [x] Create the validator;
 - [x] Create the OrderPayment class;
   - The class must contain the following fields: Order ID, Gateway URI, date of creation;
 - [x] Create the Order Details class;
@@ -84,4 +84,4 @@ The Redis server is used to store idempotency keys to avoid duplicate messaging 
 - [x] Create a mediator to select the payment gateway handle.
 - [x] Publish the event;
   - [x] The event must contain the owner email, final price, buyer, and product's name.
-- [] Create a project for consuming the events and send the email accordingly.
+- [x] Create a project for consuming the events and send the email accordingly.

@@ -9,6 +9,7 @@ CREATE TABLE ecommerce.tb_order (
     quantity int NOT NULL check(quantity > 0),
     price numeric(10, 2) NOT NULL,
     order_unique_id varchar(64) NOT NULL,
+    order_status VARCHAR(40) NOT NULL,
 
     constraint fkCustomer FOREIGN KEY(fk_customer_id)
         REFERENCES ecommerce.tb_user(id),
