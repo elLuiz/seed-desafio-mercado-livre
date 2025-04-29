@@ -46,7 +46,7 @@ public class RequestSender {
         System.setProperty("SHOW_SQL", "true");
         System.setProperty("PAG_SEGURO_REDIRECT_URL", "http://fake-junti.pagseguro.br");
         System.setProperty("PAYPAL_REDIRECT_URL", "http://fake-junti.paypal.br");
-        System.setProperty("CALLBACK_URL", "http://localhost:8080");     registry.add("spring.datasource.url", () -> postgreSQLContainer.getJdbcUrl());
+        registry.add("spring.datasource.url", () -> postgreSQLContainer.getJdbcUrl());
         registry.add("spring.datasource.username", () -> postgreSQLContainer.getUsername());
         registry.add("spring.datasource.password", () -> postgreSQLContainer.getPassword());
     }

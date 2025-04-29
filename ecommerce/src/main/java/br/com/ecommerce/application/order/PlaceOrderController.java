@@ -34,7 +34,7 @@ public class PlaceOrderController {
     public ResponseEntity<Object> order(@AuthenticationPrincipal Jwt jwt,
                                         @RequestBody @Valid OrderRequest orderRequest) {
         OrderDetails orderDetails = placeOrderService.order(new CreateOrderCommand(sessionUserService.loadUserBySubject(jwt.getSubject()), orderRequest.productId(), orderRequest.paymentGateway(), orderRequest.quantity()));
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+        return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, orderDetails.redirectURI())
                 .build();
     }

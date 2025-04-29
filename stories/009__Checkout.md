@@ -84,4 +84,4 @@ The Redis server is used to store idempotency keys; avoiding duplicate messaging
 - [x] Create a mediator to select the payment gateway handle.
 - [x] Publish the event;
   - [x] The event must contain the owner email, final price, buyer, and product's name.
-- [] Create a project for consuming the events and send the email accordingly.
+- [x] Create a project for consuming the events and send the email accordingly.

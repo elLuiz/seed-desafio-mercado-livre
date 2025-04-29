@@ -42,4 +42,3 @@ ecommerce:
       redirect-uri: ${PAG_SEGURO_REDIRECT_URL}?returnId=#orderId&redirectUrl=#redirectURL
     paypal:
       redirect-uri: ${PAYPAL_REDIRECT_URL}/#orderId?redirectUrl=#redirectURL
-    callback-uri: ${CALLBACK_URL}/api/v1/orders/#orderId

@@ -89,7 +89,7 @@ class PlaceOrderControllerTest extends ProductControllerRequestSender {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderRequest)))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isMovedPermanently())
+                .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.header().exists("Location"));
     }
 }
