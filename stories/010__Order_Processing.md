@@ -91,3 +91,18 @@ To prevent duplicate processing, the system must enforce idempotency using at le
 
 - Using a Redis instance to store the event ID when the flow is not idempotent by nature;
 - Using database constraints to avoid duplicate rows.
+
+# TODO
+- [x] Create the controller to receive the order ID, transaction ID and the status
+  - [x] The orderID must be defined in the path
+  - [x] The transaction ID and status, although mandatory, must be defined via query parameters
+- [x] Create the service layer
+  - [x] Avoid processing the same transaction ID twice for successful orders;
+  - [x] Create a method to translate the payment gateway status;
+  - [x] Create a unique index for the transaction ID;
+  - [] Handle the exception gracefully;
+  - [] Generate the event for failed orders;
+  - [] Generate the event for successful orders;
+- [] Create integration and unit tests;
+- [] Create the topic in RabbitMQ;
+- [] Create the consumers in NodeJS.

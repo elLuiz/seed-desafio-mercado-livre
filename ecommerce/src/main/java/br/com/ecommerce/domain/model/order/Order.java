@@ -40,6 +40,10 @@ public class Order extends GenericEntity {
     @Column(name = "order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+    @Column(name = "order_processing_transaction_id")
+    private String orderTransactionId;
+    @Column(name = "order_processed_at")
+    private OffsetDateTime processedAt;
 
     public static Order place(Long customerId, PaymentGateway paymentGateway, Integer quantity, Product product) {
         new OrderValidator()
@@ -59,5 +63,11 @@ public class Order extends GenericEntity {
         order.purchaseId = UUID.randomUUID().toString();
         order.orderStatus = OrderStatus.PAYMENT_PENDING;
         return order;
+    }
+
+    public void process(String transactionId, OrderStatus orderStatus) {
+        this.orderTransactionId = transactionId;
+        this.orderStatus = orderStatus;
+        this.processedAt = OffsetDateTime.now(ZoneId.of("UTC"));
     }
 }
