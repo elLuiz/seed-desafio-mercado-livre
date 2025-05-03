@@ -1,5 +1,6 @@
 package br.com.ecommerce.service.order;
 
+import br.com.ecommerce.domain.model.order.Customer;
 import br.com.ecommerce.domain.model.order.Order;
 import br.com.ecommerce.domain.model.order.OrderStatus;
 import br.com.ecommerce.domain.model.order.PaymentGateway;
@@ -64,6 +65,8 @@ class ProcessOrderServiceTest {
                 .thenReturn(Optional.of(order));
         Mockito.when(paymentMediator.getOrderStatus(PaymentGateway.PAG_SEGURO, "0"))
                 .thenReturn(OrderStatus.PROCESSED);
+        Mockito.when(orderRepository.getCustomer(order.getCustomerId()))
+                .thenReturn(Optional.of(new Customer(10L, "Customer Name", "customer@ec.com")));
         String transactionId = UUID.randomUUID().toString();
         orderService.processOrder(orderId, transactionId, "0");
 
@@ -86,6 +89,8 @@ class ProcessOrderServiceTest {
                 .thenReturn(Optional.of(order));
         Mockito.when(paymentMediator.getOrderStatus(PaymentGateway.PAG_SEGURO, "1"))
                 .thenReturn(OrderStatus.FAILED);
+        Mockito.when(orderRepository.getCustomer(order.getCustomerId()))
+                .thenReturn(Optional.of(new Customer(10L, "Customer Name", "customer@ec.com")));
         String transactionId = UUID.randomUUID().toString();
         orderService.processOrder(orderId, transactionId, "1");
 

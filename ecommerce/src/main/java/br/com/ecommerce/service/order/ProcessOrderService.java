@@ -1,11 +1,13 @@
 package br.com.ecommerce.service.order;
 
+import br.com.ecommerce.domain.model.order.Customer;
 import br.com.ecommerce.domain.model.order.Order;
 import br.com.ecommerce.domain.model.order.OrderStatus;
 import br.com.ecommerce.domain.model.order.event.OrderFailed;
 import br.com.ecommerce.domain.model.order.event.OrderProcessed;
 import br.com.ecommerce.domain.model.order.exception.OrderNotFoundException;
 import br.com.ecommerce.domain.model.order.exception.OrderProcessingException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -50,7 +52,7 @@ public class ProcessOrderService {
         OrderStatus gatewayStatus = gateway.getOrderStatus(order.getPaymentGateway(), status);
         order.process(transactionId, gatewayStatus);
 
-        publishOrderEvent(order);
+        publishOrderEvent(order, orderRepository.getCustomer(order.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("customer.not.found")));
 
         orderRepository.update(order);
         logger.info("Order {} processed with status: {}", orderId, order.getOrderStatus());
@@ -59,10 +61,10 @@ public class ProcessOrderService {
     /**
      * Publishes the appropriate event based on the order status.
      */
-    private void publishOrderEvent(Order order) {
+    private void publishOrderEvent(Order order, Customer customer) {
         switch (order.getOrderStatus()) {
             case PROCESSED:
-                eventPublisher.publishEvent(new OrderProcessed(order));
+                eventPublisher.publishEvent(new OrderProcessed(order, customer));
                 break;
             case FAILED:
                 eventPublisher.publishEvent(new OrderFailed(order));

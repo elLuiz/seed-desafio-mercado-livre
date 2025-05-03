@@ -1,5 +1,6 @@
 package br.com.ecommerce.infrastructure.repository;
 
+import br.com.ecommerce.domain.model.order.Customer;
 import br.com.ecommerce.domain.model.order.Order;
 import br.com.ecommerce.service.order.OrderRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,16 @@ class OrderEntityManagerRepository extends GenericRepository<Order> implements O
                 """;
         return Optional.ofNullable(entityManager.createQuery(query, Order.class)
                 .setParameter("purchaseId", purchaseId)
+                .getSingleResult());
+    }
+
+    @Override
+    public Optional<Customer> getCustomer(Long customerId) {
+        return Optional.ofNullable(entityManager.createQuery("""
+                SELECT new br.com.ecommerce.domain.model.order.Customer(id, fullName, login AS email) FROM User
+                WHERE id = :customerId
+                """, Customer.class)
+                .setParameter("customerId", customerId)
                 .getSingleResult());
     }
 }
