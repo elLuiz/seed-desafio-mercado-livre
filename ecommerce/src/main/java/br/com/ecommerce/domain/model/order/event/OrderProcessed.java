@@ -3,6 +3,7 @@ package br.com.ecommerce.domain.model.order.event;
 import br.com.ecommerce.domain.model.common.DomainEvent;
 import br.com.ecommerce.domain.model.order.Customer;
 import br.com.ecommerce.domain.model.order.Order;
+import br.com.ecommerce.domain.model.product.Product;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -21,8 +22,9 @@ public class OrderProcessed extends DomainEvent<Long> {
     private final BigDecimal price;
     private final String customerEmail;
     private final String customerName;
+    private final ProductDetails productDetails;
     
-    public OrderProcessed(Order order, Customer customer) {
+    public OrderProcessed(Order order, Customer customer, Product product) {
         super(order.getId(), Order.class.getSimpleName(), "order.processed");
         this.customerId = order.getCustomerId();
         this.orderPurchaseId = order.getPurchaseId();
@@ -34,5 +36,6 @@ public class OrderProcessed extends DomainEvent<Long> {
         this.price = order.getPrice().getValue();
         this.customerEmail = customer.email();
         this.customerName = customer.fullName();
+        this.productDetails = new ProductDetails(productId, product.getOwner(), product.getProductName());
     }
 }

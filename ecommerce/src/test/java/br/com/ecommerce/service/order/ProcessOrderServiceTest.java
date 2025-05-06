@@ -7,6 +7,7 @@ import br.com.ecommerce.domain.model.order.PaymentGateway;
 import br.com.ecommerce.domain.model.order.exception.OrderProcessingException;
 import br.com.ecommerce.domain.model.product.Money;
 import br.com.ecommerce.domain.model.product.Product;
+import br.com.ecommerce.service.product.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,11 +29,13 @@ class ProcessOrderServiceTest {
     PaymentMediator paymentMediator;
     @Mock
     ApplicationEventPublisher applicationEventPublisher;
+    @Mock
+    ProductRepository productRepository;
     ProcessOrderService orderService;
 
     @BeforeEach
     void setUp() {
-        orderService = new ProcessOrderService(orderRepository, paymentMediator, applicationEventPublisher);
+        orderService = new ProcessOrderService(orderRepository, paymentMediator, productRepository, applicationEventPublisher);
     }
 
     @Test
@@ -67,6 +70,8 @@ class ProcessOrderServiceTest {
                 .thenReturn(OrderStatus.PROCESSED);
         Mockito.when(orderRepository.getCustomer(order.getCustomerId()))
                 .thenReturn(Optional.of(new Customer(10L, "Customer Name", "customer@ec.com")));
+        Mockito.when(productRepository.findById(order.getProductId()))
+                .thenReturn(Optional.of(product));
         String transactionId = UUID.randomUUID().toString();
         orderService.processOrder(orderId, transactionId, "0");
 
