@@ -2,6 +2,7 @@ package br.com.ecommerce.infrastructure.payment;
 
 import br.com.ecommerce.domain.model.order.Order;
 import br.com.ecommerce.domain.model.order.OrderPayment;
+import br.com.ecommerce.domain.model.order.OrderStatus;
 import br.com.ecommerce.domain.model.order.PaymentGateway;
 import br.com.ecommerce.service.order.Gateway;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,14 @@ class PayPalGateway implements Gateway {
         String returnURL = ServletUriComponentsBuilder.fromCurrentRequest().path("/api/v1/orders/paypal/{orderId}").buildAndExpand(order.getPurchaseId()).toUri().toString();
         return new OrderPayment(order.getId(), link.replace("#orderId", order.getPurchaseId())
                 .replace("#redirectURL", returnURL), OffsetDateTime.now());
+    }
+
+    @Override
+    public OrderStatus getOrderStatus(String status) {
+        if (status == null || status.isEmpty()) {
+            throw new IllegalArgumentException("order.status.cannot.be.empty");
+        }
+        return "1".equals(status) ? OrderStatus.PROCESSED : OrderStatus.FAILED;
     }
 
     @Override

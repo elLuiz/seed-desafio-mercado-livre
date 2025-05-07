@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
@@ -40,6 +41,12 @@ public class Order extends GenericEntity {
     @Column(name = "order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+    @Column(name = "order_processing_transaction_id")
+    private String orderTransactionId;
+    @Column(name = "order_processed_at")
+    private OffsetDateTime processedAt;
+    @Transient
+    private Long ownerId;
 
     public static Order place(Long customerId, PaymentGateway paymentGateway, Integer quantity, Product product) {
         new OrderValidator()
@@ -58,6 +65,13 @@ public class Order extends GenericEntity {
         order.purchasedAt = OffsetDateTime.now(ZoneId.of("UTC"));
         order.purchaseId = UUID.randomUUID().toString();
         order.orderStatus = OrderStatus.PAYMENT_PENDING;
+        order.ownerId = product.getOwner();
         return order;
+    }
+
+    public void process(String transactionId, OrderStatus orderStatus) {
+        this.orderTransactionId = transactionId;
+        this.orderStatus = orderStatus;
+        this.processedAt = OffsetDateTime.now(ZoneId.of("UTC"));
     }
 }

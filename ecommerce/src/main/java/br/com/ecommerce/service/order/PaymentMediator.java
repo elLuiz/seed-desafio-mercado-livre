@@ -2,6 +2,7 @@ package br.com.ecommerce.service.order;
 
 import br.com.ecommerce.domain.model.order.Order;
 import br.com.ecommerce.domain.model.order.OrderPayment;
+import br.com.ecommerce.domain.model.order.OrderStatus;
 import br.com.ecommerce.domain.model.order.PaymentGateway;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,11 @@ public class PaymentMediator {
         }
     }
 
-    public OrderPayment pay(Order order, PaymentGateway paymentGateway) {
+    public OrderPayment getPaymentDetails(Order order, PaymentGateway paymentGateway) {
         return gatewayMap.get(paymentGateway).process(order);
+    }
+
+    public OrderStatus getOrderStatus(PaymentGateway paymentGateway, String orderStatus) {
+        return gatewayMap.get(paymentGateway).getOrderStatus(orderStatus);
     }
 }

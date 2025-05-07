@@ -4,6 +4,7 @@ import br.com.ecommerce.application.common.ErrorDescription;
 import br.com.ecommerce.application.common.Errors;
 import br.com.ecommerce.domain.exception.DomainException;
 import br.com.ecommerce.domain.exception.ValidationException;
+import br.com.ecommerce.domain.model.order.exception.OrderProcessingException;
 import br.com.ecommerce.util.Translator;
 import jakarta.persistence.NoResultException;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,14 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         log.warn("Domain exception", domainException);
         Errors errors = new Errors();
         errors.addError(new ErrorDescription(null, domainException.getMessage(), translator.translate(domainException.getMessage())));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(OrderProcessingException.class)
+    protected ResponseEntity<Errors> handleOrderProcessingException(OrderProcessingException orderProcessingException) {
+        log.warn("Attempted to process already processed order: {}, processed at: {}", orderProcessingException.getOrderId(), orderProcessingException.getProcessedAt());
+        Errors errors = new Errors();
+        errors.addError(new ErrorDescription(null, orderProcessingException.getMessage(), translator.translate(orderProcessingException.getMessage())));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
