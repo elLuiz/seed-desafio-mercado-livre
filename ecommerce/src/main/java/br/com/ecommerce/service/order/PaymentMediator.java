@@ -27,7 +27,7 @@ public class PaymentMediator {
         }
     }
 
-    public OrderPayment pay(Order order, PaymentGateway paymentGateway) {
+    public OrderPayment getPaymentDetails(Order order, PaymentGateway paymentGateway) {
         return gatewayMap.get(paymentGateway).process(order);
     }
 

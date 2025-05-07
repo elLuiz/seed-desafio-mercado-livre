@@ -99,7 +99,7 @@ class PlaceOrderServiceTest {
                 .thenReturn(Optional.of(product));
         Mockito.when(productRepository.deductStockAmount(10L, 11))
                 .thenReturn(ProductStockStatus.DEDUCTED);
-        Mockito.when(paymentMediator.pay(Mockito.any(Order.class), Mockito.eq(PaymentGateway.PAYPAL)))
+        Mockito.when(paymentMediator.getPaymentDetails(Mockito.any(Order.class), Mockito.eq(PaymentGateway.PAYPAL)))
                 .thenReturn(new OrderPayment(10L, "https://fake-paypal?returnId=10L&redirectUrl=https://my-ecommerce/order/uuid", OffsetDateTime.now()));
         Mockito.when(productRepository.getOwner(1L))
                 .thenReturn(new Owner(1L, "JUNIT", "junit@email.com"));

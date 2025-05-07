@@ -42,6 +42,6 @@ public class PlaceOrderService {
         Order order = Order.place(createOrderCommand.sessionUser().id(), createOrderCommand.paymentGateway(), createOrderCommand.quantity(), product);
         this.orderRepository.add(order);
         this.publisher.publishEvent(new OrderCreated(order, product, this.productRepository.getOwner(product.getOwner())));
-        return OrderDetails.convert(order, paymentMediator.pay(order, createOrderCommand.paymentGateway()));
+        return OrderDetails.convert(order, paymentMediator.getPaymentDetails(order, createOrderCommand.paymentGateway()));
     }
 }

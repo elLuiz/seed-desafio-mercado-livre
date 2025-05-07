@@ -72,7 +72,8 @@ public class ProcessOrderService {
                 eventPublisher.publishEvent(new OrderProcessed(order, customer, product));
                 break;
             case FAILED:
-                eventPublisher.publishEvent(new OrderFailed(order));
+                logger.warn("Failed to process order {}. Resending link to customer", order.getPurchaseId());
+                eventPublisher.publishEvent(new OrderFailed(order, gateway.getPaymentDetails(order, order.getPaymentGateway())));
                 break;
             default:
                 break;
